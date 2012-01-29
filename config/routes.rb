@@ -1,4 +1,6 @@
 RubyApi::Application.routes.draw do
+  get "view/:fullname" => "view#show", :as => "view"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

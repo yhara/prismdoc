@@ -32,3 +32,4 @@ Model
 * has_many :documents
 * string :english_name
 * string :native_name
+

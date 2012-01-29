@@ -1,0 +1,10 @@
+<h1><%= @entry.fullname %></h1>
+<%= raw @document.body %>
+
+<% if @entry.type == "class" %>
+  <ul>
+    <% @methods.each do |method| %>
+      <%= link_to method.fullname, view_path(method.fullname) %>
+    <% end %>
+  </ul>
+<% end %>

@@ -39,7 +39,13 @@ module RubyApi
       out.accept(RDoc::Markup::ToHtml.new)
     end
 
-    def import_class(class_name)
+    def make_class_doc(class_name)
+      entry = find_or_create_entry(class_name, class_name, "class")
+      body = ...
+      create_document(entry, body, "English")
+    end
+
+    def make_methods_doc(class_name)
       store.class_methods[class_name].each do |name|
         m = store.load_method(class_name, name)
         entry = find_or_create_entry("#{class_name}.#{m.name}", m.name,
@@ -53,6 +59,11 @@ module RubyApi
                                      "instance_method")
         create_document(entry, render_method(m), "English")
       end
+    end
+
+    def import_class(class_name)
+      make_class_doc(class_name)
+      make_methods_doc(class_name)
     end
   end
 end

@@ -1,7 +1,0 @@
-h1= @entry.fullname
-== @document.body
-
-- if @entry.type == "class"
-  ul
-    - @methods.each do |method|
-      li= link_to method.fullname, view_path(method.fullname)

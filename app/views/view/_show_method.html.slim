@@ -1,0 +1,8 @@
+h1= @entry.fullname
+- if @document
+  == @document.body
+- else
+  div No doc available!
+
+ul
+  li= link_to @entry.class_name, show_class_path(@entry.class_name, @language)

@@ -22,8 +22,8 @@ module RubyApi
 
     def create_document(entry, body, langname)
       Document.create(entry: entry,
-                      language: Language[langname],
-                      body: body)
+                       language: Language[langname],
+                       body: body)
       puts "new document for #{entry.fullname} (#{langname})"
     end
 

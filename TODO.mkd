@@ -1,0 +1,13 @@
+TODO
+====
+
+
+Known problem
+-------------
+
+* URL for Foo#- and Foo#-
+
+* Maybe it is natural to divide Entry to
+  ClassEntry, MethodEntry, etc.
+  (so that you can write method.class to get a ClassEntry)
+

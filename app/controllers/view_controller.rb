@@ -1,6 +1,5 @@
 class ViewController < ApplicationController
-  def show
-    @entry = Entry.find_by_fullname(params[:fullname])
+  before_filter :set_language
 
   def show_class
     @entry = Entry.find_by_fullname!(params[:class])
@@ -18,6 +17,12 @@ class ViewController < ApplicationController
     query = "#{params[:class]}##{params[:name]}"
     @entry = Entry.find_by_fullname(query)
     @document = find_document(@entry)
+  end
+
+  private
+
+  def set_language
+    @language = Language.from_short_name(params[:lang])
   end
 
   # May return nil

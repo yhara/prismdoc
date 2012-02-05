@@ -1,4 +1,6 @@
 RubyApi::Application.routes.draw do
+  root to: "top#index"
+
   get ":lang/:class"       => "view#show_class",
     :lang => /\w\w(-\w\w)?/
   get ":lang/:class/-:name" => "view#show_class_method",

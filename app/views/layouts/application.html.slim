@@ -13,6 +13,10 @@ html
         = select_tag "language", options_for_select(Hash[*Language.all.map{|l| [l.english_name, l.short_name]}.flatten])
 
     #content
-      = yield
+      #left
+        | menu.
+
+      #right
+        = yield
 
     #footer

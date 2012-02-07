@@ -1,5 +1,6 @@
 class ViewController < ApplicationController
-  before_filter :set_language
+  before_filter :set_language, :prepare_menu
+  layout "view/split"
 
   def show_class
     @entry = Entry.find_by_fullname!(params[:class])
@@ -23,6 +24,10 @@ class ViewController < ApplicationController
 
   def set_language
     @language = Language.from_short_name(params[:lang])
+  end
+
+  def prepare_menu
+    @modules = Entry.classes_modules
   end
 
   # May return nil

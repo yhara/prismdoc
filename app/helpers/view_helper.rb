@@ -1,7 +1,7 @@
 require 'rack/utils'
 
 module ViewHelper
-  def show_class_path(which, language)
+  def show_class_path(which, language=@language)
     fullname = (which.is_a?(Entry) ? which.fullname : which)
     [ 
       "/", Rack::Utils.escape(language.short_name),
@@ -9,7 +9,7 @@ module ViewHelper
     ].join
   end
 
-  def show_method_path(entry, language)
+  def show_method_path(entry, language=@language)
     hypen = (entry.type == "class_method" ? "-" : "")
     [ 
       "/", Rack::Utils.escape(language.short_name),

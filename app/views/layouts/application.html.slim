@@ -13,10 +13,9 @@ html
         = select_tag "language", options_for_select(Hash[*Language.all.map{|l| [l.english_name, l.short_name]}.flatten])
 
     #content
-      #left
-        | menu.
-
-      #right
+      - if content_for?(:content)
+        = yield :content
+      - else
         = yield
 
     #footer

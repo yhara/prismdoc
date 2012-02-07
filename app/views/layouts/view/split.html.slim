@@ -1,0 +1,11 @@
+- content_for :content do
+  #left
+    ul
+      - @modules.each do |mod|
+        li= link_to mod.name, show_class_path(mod)
+
+  #right
+    #body
+      = yield
+
+= render :template => 'layouts/application'

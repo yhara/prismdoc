@@ -41,7 +41,7 @@ module RubyApi
 
     def make_class_doc(class_name)
       entry = find_or_create_entry(class_name, class_name, "class")
-      body = ...
+      #body = ...
       create_document(entry, body, "English")
     end
 

@@ -31,4 +31,9 @@ class Entry < ActiveRecord::Base
   def self.[](fullname)
     Entry.find_by_fullname(fullname)
   end
+
+  def self.classes_modules
+    Entry.where(entry_type_id: [EntryType["class"].id,
+                                EntryType["module"].id])
+  end
 end

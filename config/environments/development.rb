@@ -34,4 +34,7 @@ RubyApi::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  # Use SASS instead of SCSS
+  config.sass.preferred_syntax = :sass
 end

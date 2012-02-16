@@ -1,5 +1,9 @@
 - content_for :content do
   #left
+    #search
+      input#search-box type="text"
+      a href="/"
+        | /
     ul
       - @modules.each do |mod|
         li= link_to mod.name, show_class_path(mod)

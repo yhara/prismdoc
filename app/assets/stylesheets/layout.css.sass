@@ -8,13 +8,15 @@ html, body
   top: 0
   position: fixed
   height: 25px
+  float: left
 
   #menu
     #language
       float: right
 
 #content
-  margin-top: 25px
+  position: fixed
+  top: 0
 
   #left
     width: 300px
@@ -23,6 +25,27 @@ html, body
     background: #fff
     position: fixed
     overflow: auto
+    padding-top: 20px
+
+    #search
+      position: fixed
+      top: 0
+      padding: 4px
+      background: #eee
+      width: 292px
+      border-bottom: 1px solid #ccc
+
+      #search-box
+        width: 255px
+        border: 1px solid #ccc
+        height: 18px
+        padding: 0 5px
+        margin: 0
+        margin-bottom: 4px
+        border-radius: 10px
+        outline: none
+        -webkit-border-radius: 10px
+        -moz-border-radius: 10px
 
   #right
     margin-left: 310px

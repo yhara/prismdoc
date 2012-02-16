@@ -1,5 +1,9 @@
-$LOAD_PATH.unshift "../bitclust/lib/"
-require 'bitclust'
+begin
+  $LOAD_PATH.unshift "../bitclust/lib/"
+  require 'bitclust'
+rescue LoadError
+  # for heroku
+end
 
 class BitClust::TerminalView
   # Quick hack to force using utf-8

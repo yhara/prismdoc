@@ -12,7 +12,7 @@ html
       - if content_for?(:header)
         = yield :header
       #menu
-        = select_tag "language", options_for_select(Hash[*Language.all.map{|l| [l.english_name, l.short_name]}.flatten])
+        = select_tag "language", options_for_select(language_options, current_language)
 
     #content
       - if content_for?(:content)

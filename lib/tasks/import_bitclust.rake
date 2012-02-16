@@ -1,20 +1,19 @@
 begin
   $LOAD_PATH.unshift "../bitclust/lib/"
   require 'bitclust'
-rescue LoadError
-  # for heroku
-end
+  class BitClust::TerminalView
+    # Quick hack to force using utf-8
+    def convert(string); string.encode("utf-8"); end
 
-class BitClust::TerminalView
-  # Quick hack to force using utf-8
-  def convert(string); string.encode("utf-8"); end
-
-  def puts(*args)
-    strs = *args.map{|arg| convert(arg)}
-    @buf ||= []
-    @buf.concat strs
+    def puts(*args)
+      strs = *args.map{|arg| convert(arg)}
+      @buf ||= []
+      @buf.concat strs
+    end
+    attr_reader :buf
   end
-  attr_reader :buf
+rescue LoadError
+  # on heroku
 end
 
 module RubyApi

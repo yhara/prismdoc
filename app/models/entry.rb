@@ -36,4 +36,8 @@ class Entry < ActiveRecord::Base
     Entry.where(entry_type_id: [EntryType["class"].id,
                                 EntryType["module"].id])
   end
+
+  def self.libraries
+    Entry.where(entry_type_id: EntryType["library"].id)
+  end
 end

@@ -7,8 +7,8 @@
 - content_for :content do
   #left
     ul
-      - @modules.each do |mod|
-        li= link_to mod.name, show_class_path(mod)
+      - @libraries.each do |lib|
+        li= link_to lib.name, show_library_path(lib)
 
   #right
     #body

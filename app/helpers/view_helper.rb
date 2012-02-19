@@ -1,6 +1,14 @@
 require 'rack/utils'
 
 module ViewHelper
+  def show_library_path(which, language=@language)
+    fullname = (which.is_a?(Entry) ? which.fullname : which)
+    [ 
+      "/", Rack::Utils.escape(language.short_name),
+      "/", Rack::Utils.escape(fullname)
+    ].join
+  end
+
   def show_class_path(which, language=@language)
     fullname = (which.is_a?(Entry) ? which.fullname : which)
     [ 

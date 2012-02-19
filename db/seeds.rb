@@ -13,6 +13,7 @@ end
 
 %w(class module
    class_method instance_method
+   library
 ).each do |n|
   EntryType.create(name: n)
 end

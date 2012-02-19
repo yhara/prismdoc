@@ -23,8 +23,10 @@ module RubyApi
     # code taken from bitclust/searcher.rb
 
     def db
-      dblocation = URI.parse("file:///Users/yhara/.rurema/db/1.9.3/")
-      BitClust::MethodDatabase.connect(dblocation)
+      @db ||= begin
+        dblocation = URI.parse("file:///Users/yhara/.rurema/db/1.9.3/")
+        BitClust::MethodDatabase.connect(dblocation)
+      end
     end
 
     def make_view
@@ -79,6 +81,17 @@ module RubyApi
       make_methods(class_name, "#")
     end
 
+    def import_libraries
+      libs = db.libraries.select{|lib|
+        not lib.name == "_builtin" and
+        not lib.is_sublibrary
+      }
+      libs.each do |lib|
+        entry = find_or_create_entry(lib.name, lib.name, "library")
+        create_document(entry, lib.source, "Japanese")
+        create_document(entry, "library #{lib.name}.", "English")
+      end
+    end
   end
 end
 
@@ -87,10 +100,11 @@ namespace :import do
   task :bitclust => :environment do
     op = RubyApi::RakeTaskImportBitClust.new
 
-    op.import_class("Array")
-    op.import_class("String")
-    op.import_class("Hash")
-    op.import_class("Regexp")
-    op.import_class("Symbol")
+#    op.import_class("Array")
+#    op.import_class("String")
+#    op.import_class("Hash")
+#    op.import_class("Regexp")
+#    op.import_class("Symbol")
+    op.import_libraries
   end
 end

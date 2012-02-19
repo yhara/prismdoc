@@ -27,6 +27,7 @@ class ViewController < ApplicationController
   end
 
   def prepare_menu
+    @modules = Entry.classes_modules
     @libraries = Entry.libraries
   end
 

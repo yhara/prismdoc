@@ -6,6 +6,12 @@
 
 - content_for :content do
   #left
+    h2 Built-in
+    ul
+      - @modules.each do |mod|
+        li= link_to mod.name, show_class_path(mod)
+
+    h2 Standard library
     ul
       - @libraries.each do |lib|
         li= link_to lib.name, show_library_path(lib)

@@ -65,7 +65,8 @@ module RubyApi
     def make_methods(class_name, typesym)
       method_names(class_name, typesym).each do |name|
         entry = find_or_create_entry([class_name, typesym, name].join,
-                                     name, "class")
+                                     name,
+                                     (typesym == "." ? "class_method" : "instance_method"))
 
         make_view{|v|
           v.show_method db.search_methods(pat(class_name, typesym, name))
@@ -100,11 +101,11 @@ namespace :import do
   task :bitclust => :environment do
     op = RubyApi::RakeTaskImportBitClust.new
 
-#    op.import_class("Array")
-#    op.import_class("String")
-#    op.import_class("Hash")
-#    op.import_class("Regexp")
-#    op.import_class("Symbol")
+    op.import_class("Array")
+    op.import_class("String")
+    op.import_class("Hash")
+    op.import_class("Regexp")
+    op.import_class("Symbol")
     op.import_libraries
   end
 end

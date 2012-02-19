@@ -26,18 +26,25 @@ class Entry < ActiveRecord::Base
     self.fullname[/\A(.*)([\.\#])([^\.\#]+)\z/, 3]
   end
 
+  def inspect
+    "#<Entry(#{entry_type.name}) id: #{id}, name: #{name}, fullname: #{fullname.inspect}>"
+  end
+
   # Shortcut to an instance of Entry.
   # Useful in rails console (eg. Entry["Array#map!"])
   def self.[](fullname)
-    Entry.find_by_fullname(fullname)
+    Entry.find_by_fullname!(fullname)
+  end
+
+  def self.find_by_type(*type_names)
+    Entry.where(entry_type_id: type_names.map{|n| EntryType[n].id})
   end
 
   def self.classes_modules
-    Entry.where(entry_type_id: [EntryType["class"].id,
-                                EntryType["module"].id])
+    find_by_type("class", "module")
   end
 
   def self.libraries
-    Entry.where(entry_type_id: EntryType["library"].id)
+    find_by_type("library")
   end
 end

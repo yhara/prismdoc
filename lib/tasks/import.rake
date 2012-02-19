@@ -15,7 +15,7 @@ module RubyApi
       if entry.nil?
         entry = Entry.create!(fullname: fullname, name: name,
                              entry_type: EntryType[type])
-        puts "new entry: #{fullname}"
+        puts "new entry: #{type} #{fullname}"
       end
       entry
     end

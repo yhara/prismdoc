@@ -5,7 +5,7 @@ module RubyApi
     include RakeTaskImport
 
     def store
-      data_path = File.expand_path("../ruby-1.9.3-p0/.ext/rdoc")
+      data_path = File.expand_path("~/r/ruby-1.9.3-p0/.ext/rdoc")
 
       options = RDoc::RI::Driver.process_args(["-d", data_path])
       ri = RDoc::RI::Driver.new(options)
@@ -41,7 +41,7 @@ module RubyApi
 
     def make_class_doc(class_name)
       entry = find_or_create_entry(class_name, class_name, "class")
-      #body = ...
+      body = "Class/Module #{class_name}."
       create_document(entry, body, "English")
     end
 

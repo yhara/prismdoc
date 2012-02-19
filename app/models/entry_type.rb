@@ -4,6 +4,6 @@ class EntryType < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
 
   def self.[](name)
-    EntryType.find_by_name(name)
+    EntryType.find_by_name!(name)
   end
 end

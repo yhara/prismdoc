@@ -1,12 +1,14 @@
 RubyApi::Application.routes.draw do
   root to: "top#index"
 
+  rexp_lang = /\w\w(-\w\w)?/
+
   get ":lang/:class"       => "view#show_class",
-    :lang => /\w\w(-\w\w)?/
-  get ":lang/:class/-:name" => "view#show_class_method",
-    :lang => /\w\w(-\w\w)?/
+    :lang => rexp_lang
+  get ":lang/:class/.:name" => "view#show_class_method",
+    :lang => rexp_lang
   get ":lang/:class/:name" => "view#show_instance_method",
-    :lang => /\w\w(-\w\w)?/
+    :lang => rexp_lang
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

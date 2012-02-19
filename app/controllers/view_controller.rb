@@ -3,21 +3,25 @@ class ViewController < ApplicationController
   layout "view/split"
 
   def show_class
-    @entry = Entry.find_by_fullname!(params[:class])
-    @document = find_document(@entry)
-    @methods = Entry.where("fullname LIKE ?", @entry.fullname + "%")
+    find_entry(params[:class]) do |entry|
+      @entry = entry
+      @document = find_document(@entry)
+      @methods = Entry.where("fullname LIKE ?", @entry.fullname + "%")
+    end
   end
 
   def show_class_method
-    query = "#{params[:class]}.#{params[:name]}"
-    @entry = Entry.find_by_fullname(query)
-    @document = find_document(@entry)
+    find_entry("#{params[:class]}.#{params[:name]}") do |entry|
+      @entry = entry
+      @document = find_document(@entry)
+    end
   end
 
   def show_instance_method
-    query = "#{params[:class]}##{params[:name]}"
-    @entry = Entry.find_by_fullname(query)
-    @document = find_document(@entry)
+    find_entry("#{params[:class]}##{params[:name]}") do |entry|
+      @entry = entry
+      @document = find_document(@entry)
+    end
   end
 
   private
@@ -29,6 +33,14 @@ class ViewController < ApplicationController
   def prepare_menu
     @modules = Entry.classes_modules
     @libraries = Entry.libraries
+  end
+
+  def find_entry(fullname)
+    if entry = Entry.find_by_fullname(fullname)
+      yield entry
+    else
+      not_found
+    end
   end
 
   # May return nil

@@ -9,7 +9,7 @@ module ViewHelper
     ].join
   end
 
-  def show_class_path(which, language=@language)
+  def show_module_path(which, language=@language)
     fullname = (which.is_a?(Entry) ? which.fullname : which)
     [ 
       "/", Rack::Utils.escape(language.short_name),

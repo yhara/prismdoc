@@ -9,7 +9,7 @@
     h2 Built-in
     ul
       - @modules.each do |mod|
-        li= link_to mod.name, show_class_path(mod)
+        li= link_to mod.name, show_module_path(mod)
 
     h2 Standard library
     ul

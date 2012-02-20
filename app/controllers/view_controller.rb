@@ -2,8 +2,16 @@ class ViewController < ApplicationController
   before_filter :set_language, :prepare_menu
   layout "view/split"
 
-  def show_class
-    find_entry(params[:class]) do |entry|
+  def show_library
+    find_entry(params[:library]) do |entry|
+      @entry = entry
+      @document = find_document(@entry)
+      #@methods = Entry.where("fullname LIKE ?", @entry.fullname + "%")
+    end
+  end
+
+  def show_module
+    find_entry(params[:module]) do |entry|
       @entry = entry
       @document = find_document(@entry)
       @methods = Entry.where("fullname LIKE ?", @entry.fullname + "%")
@@ -11,14 +19,14 @@ class ViewController < ApplicationController
   end
 
   def show_class_method
-    find_entry("#{params[:class]}.#{params[:name]}") do |entry|
+    find_entry("#{params[:module]}.#{params[:name]}") do |entry|
       @entry = entry
       @document = find_document(@entry)
     end
   end
 
   def show_instance_method
-    find_entry("#{params[:class]}##{params[:name]}") do |entry|
+    find_entry("#{params[:module]}##{params[:name]}") do |entry|
       @entry = entry
       @document = find_document(@entry)
     end

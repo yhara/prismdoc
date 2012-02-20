@@ -3,11 +3,13 @@ RubyApi::Application.routes.draw do
 
   rexp_lang = /\w\w(-\w\w)?/
 
-  get ":lang/:class"       => "view#show_class",
+  get ":lang/:library"       => "view#show_library",
+    :lang => rexp_lang, :library => /[a-z].*/
+  get ":lang/:module"       => "view#show_module",
+    :lang => rexp_lang, :module => /[A-Z].*/
+  get ":lang/:module/.:name" => "view#show_class_method",
     :lang => rexp_lang
-  get ":lang/:class/.:name" => "view#show_class_method",
-    :lang => rexp_lang
-  get ":lang/:class/:name" => "view#show_instance_method",
+  get ":lang/:module/:name" => "view#show_instance_method",
     :lang => rexp_lang
 
   # The priority is based upon order of creation:

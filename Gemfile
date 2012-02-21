@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.1'
 
 # Model
-gem 'sqlite3', group: :development
+#gem 'sqlite3', group: :development
+gem 'pg'
 
 # View
 gem 'slim-rails'
@@ -17,8 +18,8 @@ end
 
 # Heroku
 group :production do
-  gem 'pg', group: :production
-#  gem 'therubyracer-heroku', '0.8.1.pre3'
+  gem 'pg'
+  gem 'therubyracer-heroku', '0.8.1.pre3'
 end
 
 gem 'jquery-rails'

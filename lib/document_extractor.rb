@@ -1,3 +1,5 @@
+require 'yard'
+
 module RubyApi
   class DocumentExtractor
     def self.for(language)
@@ -15,7 +17,8 @@ module RubyApi
       case entry.type
       when "library"
         body = extract_library(entry.fullname)
-      when "class"
+      when "class", "module"
+        body = extract_module(entry.fullname)
       when "instance_method"
       when "class_method"
       when "constant"
@@ -31,6 +34,15 @@ module RubyApi
         else
           name
         end
+      end
+
+      def extract_module(name)
+        registry[name].docstring
+      end
+
+      private
+      def registry
+        @registry ||= YARD::Registry.load(DocumentSource.yard_cache)
       end
     end
 

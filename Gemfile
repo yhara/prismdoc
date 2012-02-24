@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'yard'
+
 gem 'rails', '3.2.1'
 
 # Model

@@ -19,8 +19,8 @@ module RubyApi
         body = extract_library(entry.fullname)
       when "class", "module"
         body = extract_module(entry.fullname)
-      when "instance_method"
-      when "class_method"
+      when "instance_method", "class_method"
+        body = extract_method(entry.fullname)
       when "constant"
       end
       PseudoDocument.new(body)
@@ -40,6 +40,10 @@ module RubyApi
         registry[name].docstring
       end
 
+      def extract_method(name)
+        registry[name].docstring
+      end
+
       private
       def registry
         @registry ||= YARD::Registry.load(DocumentSource.yard_cache)
@@ -51,7 +55,6 @@ module RubyApi
       def extract_method
 
       end
-      
     end
   end
 end

@@ -88,7 +88,9 @@ module RubyApi
         not lib.is_sublibrary
       }
       libs.each do |lib|
-        entry = find_or_create_entry(lib.name, lib.name, "library")
+        # Call downcase for English.rb and Win32API.rb
+        name = lib.name.downcase
+        entry = find_or_create_entry(name, name, "library")
         create_document(entry, lib.source, "Japanese")
         create_document(entry, "library #{lib.name}.", "English")
       end

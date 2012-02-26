@@ -1,9 +1,15 @@
+require 'entry_extractor'
+
 namespace :import do
   task :init_ => :environment do
     Entry.create(name: "Array", fullname: "Array",
                  entry_type: EntryType["class"])
     Entry.create(name: "String", fullname: "String",
                  entry_type: EntryType["class"])
+  end
+
+  task :entries => :environment do
+    RubyApi::EntryExtractor.new.run
   end
 end
 

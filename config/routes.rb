@@ -8,6 +8,8 @@ RubyApi::Application.routes.draw do
   get ":lang/:module/:name" => "view#show_instance_method",
     :lang => rexp_lang
   get ":lang/:library"       => "view#show_library",
+    :lang => rexp_lang, :library => /English|Win32API/
+  get ":lang/:library"       => "view#show_library",
     :lang => rexp_lang, :library => /[a-z].*/
   get ":lang/:module"       => "view#show_module",
     :lang => rexp_lang, :module => /[A-Z].*/

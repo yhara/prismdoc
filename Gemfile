@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'yard'
+yard_path = File.expand_path("../yard", File.dirname(__FILE__))
+gem 'yard', git: "file://#{yard_path}", branch: "i18n"
+gem 'fast_gettext'
 
 gem 'rails', '3.2.1'
 

@@ -1,5 +1,3 @@
-require 'yard'
-
 module RubyApi
   class DocumentExtractor
     def self.for(language)
@@ -64,7 +62,7 @@ module RubyApi
       def self.init
         @init ||= begin
           FastGettext.add_text_domain('yard',
-            path: "/Users/yhara/r/ruby-1.9.3-p125/locale/",
+            path: "#{DocumentSource.ruby_src}/locale/",
             type: :po)
           FastGettext.text_domain = 'yard'
           FastGettext.locale = 'cp'
@@ -81,8 +79,28 @@ module RubyApi
 
       def extract_module(name)
         orig = @yard_extractor.extract_module(name)
-        Rails.logger.debug orig.inspect
-        _(orig)
+        translate(orig)
+      end
+
+      private
+
+      def translate(str)
+        translated_data = ""
+
+        text = YARD::I18N::Text.new(StringIO.new(str))
+        text.translate do |type, *args|
+          case type
+          when :paragraph
+            paragraph, = *args
+            translated_data << _(paragraph)
+          when :empty_line
+            line, = *args
+            translated_data << line
+          else
+            raise "should not reach here: unexpected type: #{type}"
+          end
+        end
+        translated_data
       end
     end
   end

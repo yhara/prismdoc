@@ -15,8 +15,7 @@ module RubyApi
       libs.each do |lib|
         name = lib.name
         logger.debug "creating entry for library #{name}"
-        Entry.create!(fullname: name, name: name,
-                      entry_type: EntryType["library"])
+        Entry.create!(fullname: name, name: name, kind: "library")
       end
     end
 
@@ -42,7 +41,7 @@ module RubyApi
           end
           Entry.create!(fullname: m.name, name: m.name,
                         superclass: superclass,
-                        entry_type: EntryType[m.type.to_s])
+                        kind: m.type.to_s)
         else
           logger.info "skipping #{m.type} #{m.name}"
         end

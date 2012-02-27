@@ -14,7 +14,7 @@ module RubyApi
     end
 
     def extract_document(entry)
-      case entry.type
+      case entry.kind
       when "library"
         body = extract_library(entry.fullname)
       when "class", "module"

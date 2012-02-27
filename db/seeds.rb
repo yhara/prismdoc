@@ -8,12 +8,3 @@
 ].each do |s, e, n|
   Language.create(short_name: s, english_name: e, native_name: n)
 end
-
-# Create EntryTypes
-
-%w(class module
-   class_method instance_method
-   library
-).each do |n|
-  EntryType.create(name: n)
-end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120226162544) do
+ActiveRecord::Schema.define(:version => 20120227051210) do
 
   create_table "documents", :force => true do |t|
     t.integer "entry_id"
@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(:version => 20120226162544) do
   create_table "entries", :force => true do |t|
     t.string  "name"
     t.string  "fullname"
-    t.integer "entry_type_id"
     t.integer "superclass_id"
+    t.string  "kind"
   end
 
   create_table "entry_types", :force => true do |t|

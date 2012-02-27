@@ -1,16 +1,15 @@
 class Entry < ActiveRecord::Base
   has_many :documents
-  belongs_to :entry_type
   belongs_to :superclass, class_name: "Entry" # only used for classes
 
   validates :name,     presence: true
   validates :fullname, presence: true, uniqueness: true
 
-  # Returns a string like "class", "instance_method", etc.
-  def type
-    self.entry_type.name
-  end
-
+  include Enumerize
+  enumerize :kind, in: ["library", "class", "module",
+                        "singleton_method", "instance_method",
+                        "constant"]
+                          
   # Returns the class name part of the fullname.
   # Only meaningful for method entries
   #
@@ -37,17 +36,13 @@ class Entry < ActiveRecord::Base
     Entry.find_by_fullname!(fullname)
   end
 
-  def self.find_by_type(*type_names)
-    Entry.where(entry_type_id: type_names.map{|n| EntryType[n].id})
-  end
-
   def self.classes_modules
-    find_by_type("class", "module").select{|m|
+    Entry.where(kind: ["class", "module"]).select{|m|
       m.superclass.nil? or m.superclass == Entry["Object"]
     }
   end
 
   def self.libraries
-    find_by_type("library")
+    Entry.where(kind: "library")
   end
 end

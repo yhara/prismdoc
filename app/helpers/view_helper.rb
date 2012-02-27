@@ -18,7 +18,7 @@ module ViewHelper
   end
 
   def show_method_path(entry, language=@language)
-    prefix = (entry.type == "class_method" ? "." : "")
+    prefix = (entry.kind == "class_method" ? "." : "")
     [ 
       "/", Rack::Utils.escape(language.short_name),
       "/", Rack::Utils.escape(entry.class_name),

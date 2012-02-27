@@ -7,6 +7,7 @@ gem 'rails', '3.2.1'
 # Model
 #gem 'sqlite3', group: :development
 gem 'pg'
+gem 'enumerize'
 
 # View
 gem 'slim-rails'

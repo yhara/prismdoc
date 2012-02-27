@@ -22,19 +22,42 @@ module RubyApi
 
     def make_module_entries
       builtin = db.libraries.find{|l| l.name == "_builtin"}
-      builtin.classes.each do |c|
-        case c.type
+      tree = Hash.new{|h, k| h[k] = {} }
+      root, rest = builtin.classes.partition{|m| m.superclass.nil?}
+
+      make_node = ->(m){
+        Hash[*rest.select{|c| c.superclass == m}.
+                   map{|c| [c, make_node[c]]}.flatten(1)]
+      }
+      tree = Hash[*root.map{|m| [m, make_node[m]]}.flatten(1)]
+
+      walk_tree tree do |m, children|
+        case m.type
         when :class, :module
-          logger.debug "creating entry for #{c.type} #{c.name}"
-          Entry.create!(fullname: c.name, name: c.name,
-                        entry_type: EntryType[c.type.to_s])
+          logger.debug "creating entry for #{m.type} #{m.name}"
+          if m.superclass
+            superclass = Entry[m.superclass.name]
+          else
+            superclass = nil
+          end
+          Entry.create!(fullname: m.name, name: m.name,
+                        superclass: superclass,
+                        entry_type: EntryType[m.type.to_s])
         else
-          logger.info "skipping #{c.type} #{c.name}"
+          logger.info "skipping #{m.type} #{m.name}"
         end
       end
     end
 
     private
+
+    def walk_tree(tree, &block)
+      tree.each do |k, v|
+        yield k, v
+        walk_tree(v, &block)
+      end
+    end
+
     def db
       @db ||= begin
         dblocation = URI.parse("file://#{DocumentSource.bitclust_db}")

@@ -1,6 +1,7 @@
 class Entry < ActiveRecord::Base
   has_many :documents
   belongs_to :entry_type
+  belongs_to :superclass, class_name: "Entry" # only used for classes
 
   validates :name,     presence: true
   validates :fullname, presence: true, uniqueness: true
@@ -41,7 +42,9 @@ class Entry < ActiveRecord::Base
   end
 
   def self.classes_modules
-    find_by_type("class", "module")
+    find_by_type("class", "module").select{|m|
+      m.superclass.nil? or m.superclass == Entry["Object"]
+    }
   end
 
   def self.libraries

@@ -8,6 +8,7 @@ namespace :import do
                  entry_type: EntryType["class"])
   end
 
+  desc "import entries from bitclust"
   task :entries => :environment do
     RubyApi::EntryExtractor.new.run
   end

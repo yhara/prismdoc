@@ -3,16 +3,16 @@ class CreateModels < ActiveRecord::Migration
     create_table :languages do |t|
       t.string :english_name
       t.string :native_name
-    end
-
-    create_table :entry_types do |t|
-      t.string :name
+      t.string :short_name
     end
 
     create_table :entries do |t|
       t.string :name
       t.string :fullname
-      t.integer :entry_type_id
+      t.string :kind
+
+      t.integer :superclass_id  # for classes
+      t.integer :library_id     # for classes,modules
     end
 
     create_table :documents do |t|

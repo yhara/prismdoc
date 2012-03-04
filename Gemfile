@@ -28,3 +28,6 @@ group :production do
 end
 
 gem 'jquery-rails'
+
+gem 'pry-rails', :group => :development
+

@@ -1,21 +1,4 @@
-begin
-  $LOAD_PATH.unshift "../bitclust/lib/"
-  require 'bitclust'
-  class BitClust::TerminalView
-    # Quick hack to force using utf-8
-    def convert(string); string.encode("utf-8"); end
-
-    def puts(*args)
-      strs = *args.map{|arg| convert(arg)}
-      @buf ||= []
-      @buf.concat strs
-    end
-    attr_reader :buf
-  end
-rescue LoadError
-  # on heroku
-  puts "WARNING: bitclust not installed"
-end
+require 'bitclust_helper'
 
 module RubyApi
   class DocumentExtractor
@@ -93,7 +76,9 @@ module RubyApi
       end
 
       def extract_module(name)
+      self.class.init
         orig = @yard_extractor.extract_module(name)
+        Rails.logger.debug([:orig, orig].inspect)
         translate(orig)
       end
 
@@ -107,6 +92,7 @@ module RubyApi
           case type
           when :paragraph
             paragraph, = *args
+            Rails.logger.debug([:paragraph, paragraph].inspect)
             translated_data << _(paragraph)
           when :empty_line
             line, = *args
@@ -120,6 +106,8 @@ module RubyApi
     end
 
     class BitClustExtractor < DocumentExtractor
+      include BitClustHelper
+
       def extract_library(name)
         lib = db.libraries.find{|l| l.name == name}
         raise ArgumentError, "library #{name} not found" unless lib
@@ -128,7 +116,7 @@ module RubyApi
       end
 
       def extract_module(name)
-        with_view{|v|
+        with_bitclust_view{|v|
           v.show_class db.search_classes(name)
           v.buf.join
         }
@@ -136,22 +124,6 @@ module RubyApi
 
       def extract_method(name)
         raise
-      end
-
-      private
-      def db
-        @db ||= begin
-          dblocation = URI.parse("file:///Users/yhara/.rurema/db/1.9.3/")
-          BitClust::MethodDatabase.connect(dblocation)
-        end
-      end
-
-      def with_view(&block)
-        compiler = BitClust::Plain.new
-        yield BitClust::TerminalView.new(compiler,
-                                         describe_all: false,
-                                         line: false,
-                                         encoding: nil)
       end
     end
 

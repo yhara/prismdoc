@@ -1,3 +1,22 @@
+begin
+  $LOAD_PATH.unshift "../bitclust/lib/"
+  require 'bitclust'
+  class BitClust::TerminalView
+    # Quick hack to force using utf-8
+    def convert(string); string.encode("utf-8"); end
+
+    def puts(*args)
+      strs = *args.map{|arg| convert(arg)}
+      @buf ||= []
+      @buf.concat strs
+    end
+    attr_reader :buf
+  end
+rescue LoadError
+  # on heroku
+  puts "WARNING: bitclust not installed"
+end
+
 module RubyApi
   class DocumentExtractor
     def self.for(language)
@@ -52,10 +71,6 @@ module RubyApi
       end
     end
 
-    class BitClustExtractor < DocumentExtractor
-      # TODO
-    end
-
     class TranslationExtractor < DocumentExtractor
       include FastGettext::Translation
 
@@ -103,5 +118,42 @@ module RubyApi
         translated_data
       end
     end
+
+    class BitClustExtractor < DocumentExtractor
+      def extract_library(name)
+        lib = db.libraries.find{|l| l.name == name}
+        raise ArgumentError, "library #{name} not found" unless lib
+
+        lib.source
+      end
+
+      def extract_module(name)
+        with_view{|v|
+          v.show_class db.search_classes(name)
+          v.buf.join
+        }
+      end
+
+      def extract_method(name)
+        raise
+      end
+
+      private
+      def db
+        @db ||= begin
+          dblocation = URI.parse("file:///Users/yhara/.rurema/db/1.9.3/")
+          BitClust::MethodDatabase.connect(dblocation)
+        end
+      end
+
+      def with_view(&block)
+        compiler = BitClust::Plain.new
+        yield BitClust::TerminalView.new(compiler,
+                                         describe_all: false,
+                                         line: false,
+                                         encoding: nil)
+      end
+    end
+
   end
 end

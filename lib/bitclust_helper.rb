@@ -1,6 +1,8 @@
 begin
   $LOAD_PATH.unshift "../bitclust/lib/"
   require 'bitclust'
+
+  # Patch for document_extractor.rb
   class BitClust::TerminalView
     # Quick hack to force using utf-8
     def convert(string); string.encode("utf-8"); end

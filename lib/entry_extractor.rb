@@ -1,9 +1,14 @@
+require 'tsort'
 require 'logger'
 require 'bitclust_helper'
 
 module RubyApi
   class EntryExtractor
     include BitClustHelper
+
+    def initialize
+      @missing_superclass = []
+    end
 
     def run
       make_library_entries
@@ -12,72 +17,94 @@ module RubyApi
     def make_library_entries
       libs = db.libraries.select{|l|
         # TODO: handle sublibraries
-        not l.is_sublibrary and ["_builtin", "set"].include?(l.name)
+        #not l.is_sublibrary #and ["_builtin", "set"].include?(l.name)
+        not %w(minitest/spec).include?(l.name) #TODO
       }
-      # Make sure _builtin comes first
+      # _builtin should come first
       libs.unshift(libs.delete(libs.find{|l| l.name == "_builtin"}))
 
       libs.each do |lib|
-        name = lib.name
+        # Note: downcasing for English.rb and Win32API.rb
+        name = lib.name.downcase
         logger.debug "creating entry for library #{name}"
         lib_entry = Entry.create!(fullname: name, name: name, kind: "library")
         make_module_entries(lib, lib_entry)
+      end
+
+      logger.info "Setting suspended .superclass"
+
+      @missing_superclass.each do |child, parent|
+        logger.debug "- #{child.name} < #{parent.name}"
+        superentry = Entry[fullname_of(parent)]
+        Entry[fullname_of(child)].update_attributes!(superclass: superentry)
       end
     end
 
     # Make entries for classes/modules defined in the library.
     #
-    # To set the superclasses properly, we need to make a
-    # inheritance tree.
     def make_module_entries(library, lib_entry)
-      tree = Hash.new{|h, k| h[k] = {} }
-      root, rest = library.classes.partition{|m|
-        # This is true when m is
-        #   * a module
-        #   * BasicObject (Ruby 1.9), Object (Ruby 1.8)
-        #   * object ::ARGF
-        #   * object ::ENV
-        m.superclass.nil?
-      }
-
-      # Construct tree by inheritance
-      make_node = ->(m){
-        Hash[*rest.select{|c| c.superclass == m}.
-                   map{|c| [c, make_node[c]]}.flatten(1)]
-      }
-      tree = Hash[*root.map{|m| [m, make_node[m]]}.flatten(1)]
-
-      # Traverse the tree from the top to the bottom
-      walk_tree tree do |m, children|
+      mods = BitClustModules.new(library).tsort
+      logger.debug [library.name, mods.map(&:name)].inspect
+      mods.each do |m|
         case m.type
         when :class, :module
-          logger.debug "creating entry for #{m.type} #{m.name}"
-          if m.superclass
-            superclass = Entry[m.superclass.name]
+          if m.library != library
+            logger.warn "library #{library.name} defines #{fullname_of(m)}; skipping."
+            next
+          end
+
+          logger.debug "creating entry for #{m.type} #{fullname_of(m)}"
+
+          if s = m.superclass 
+            superclass = Entry.find_by_fullname(fullname_of(s))
+            @missing_superclass.push [m, s] if superclass.nil?
           else
             superclass = nil
           end
-          Entry.create!(fullname: m.name, name: m.name,
+
+          Entry.create!(fullname: fullname_of(m),
+                        name: m.name,
                         superclass: superclass,
                         kind: m.type.to_s,
                         library: lib_entry)
         else
-          logger.info "skipping #{m.type} #{m.name}"
+          logger.warn "skipping #{m.type} #{m.name}"
         end
       end
     end
 
     private
 
-    def walk_tree(tree, &block)
-      tree.each do |k, v|
-        yield k, v
-        walk_tree(v, &block)
-      end
+    def fullname_of(mod)
+      mod.library.name.downcase + ";" + mod.name
     end
 
     def logger
-      Logger.new($STDOUT)
+      Logger.new($stdout).tap{|l| l.level = Logger::INFO}
+    end
+
+    # We need to make sure create BasicObject first 
+    # because otherwise we can't set Object's superclass.
+    #
+    # TSort (magically) gives us the ordering.
+    class BitClustModules
+      include TSort
+
+      def initialize(lib)
+        @modules = lib.classes
+      end
+
+      def tsort_each_node(&block)
+        @modules.each &block
+      end
+
+      def tsort_each_child(mod, &block)
+        return if mod.nil?
+        return if mod.superclass.nil?
+        return if not @modules.include?(mod.superclass)
+
+        yield mod.superclass
+      end
     end
   end
 end

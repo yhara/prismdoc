@@ -1,6 +1,7 @@
 class Entry < ActiveRecord::Base
   has_many :documents
   belongs_to :superclass, class_name: "Entry" # only used for classes
+  belongs_to :library,    class_name: "Entry"
 
   validates :name,     presence: true
   validates :fullname, presence: true, uniqueness: true
@@ -24,10 +25,6 @@ class Entry < ActiveRecord::Base
   # eg. Returns a string "each" for entry of Array#each
   def method_name
     self.fullname[/\A(.*)([\.\#])([^\.\#]+)\z/, 3]
-  end
-
-  def inspect
-    "#<Entry(#{entry_type.name}) id: #{id}, name: #{name}, fullname: #{fullname.inspect}>"
   end
 
   # Shortcut to an instance of Entry.

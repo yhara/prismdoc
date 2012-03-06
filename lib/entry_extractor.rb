@@ -27,7 +27,8 @@ module RubyApi
         # Note: downcasing for English.rb and Win32API.rb
         name = lib.name.downcase
         logger.debug "creating entry for library #{name}"
-        lib_entry = Entry.create!(fullname: name, name: name, kind: "library")
+        Entry
+        lib_entry = LibraryEntry.create!(fullname: name, name: name)
         make_module_entries(lib, lib_entry)
       end
 
@@ -55,18 +56,23 @@ module RubyApi
 
           logger.debug "creating entry for #{m.type} #{fullname_of(m)}"
 
-          if s = m.superclass 
-            superclass = Entry.find_by_fullname(fullname_of(s))
-            @missing_superclass.push [m, s] if superclass.nil?
+          if m.type == :module
+            ModuleEntry.create!(fullname: fullname_of(m),
+                                name: m.name,
+                                library: lib_entry)
           else
-            superclass = nil
-          end
+            if s = m.superclass 
+              superclass = Entry.find_by_fullname(fullname_of(s))
+              @missing_superclass.push [m, s] if superclass.nil?
+            else
+              superclass = nil
+            end
 
-          Entry.create!(fullname: fullname_of(m),
-                        name: m.name,
-                        superclass: superclass,
-                        kind: m.type.to_s,
-                        library: lib_entry)
+            ClassEntry.create!(fullname: fullname_of(m),
+                               name: m.name,
+                               superclass: superclass,
+                               library: lib_entry)
+          end
         else
           logger.warn "skipping #{m.type} #{m.name}"
         end

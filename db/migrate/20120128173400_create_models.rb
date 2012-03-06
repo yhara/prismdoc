@@ -9,10 +9,11 @@ class CreateModels < ActiveRecord::Migration
     create_table :entries do |t|
       t.string :name
       t.string :fullname
-      t.string :kind
+      t.string :type
 
-      t.integer :superclass_id  # for classes
-      t.integer :library_id     # for classes,modules
+      t.integer :superclass_id  # only: classes
+      t.integer :module_id      # except: libraries, modules
+      t.integer :library_id     # except: libraries 
     end
 
     create_table :documents do |t|

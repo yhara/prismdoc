@@ -1,0 +1,2 @@
+class SingletonMethodEntry < Entry
+end

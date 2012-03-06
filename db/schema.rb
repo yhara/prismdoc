@@ -22,8 +22,9 @@ ActiveRecord::Schema.define(:version => 20120128173400) do
   create_table "entries", :force => true do |t|
     t.string  "name"
     t.string  "fullname"
-    t.string  "kind"
+    t.string  "type"
     t.integer "superclass_id"
+    t.integer "module_id"
     t.integer "library_id"
   end
 

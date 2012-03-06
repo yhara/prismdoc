@@ -1,6 +1,6 @@
-h1= @entry.fullname
+h1= @entry.name
 pre== @document.body
 
 ul
-  - @methods.each do |entry|
-    li= link_to entry.fullname, show_method_path(entry, @language)
+  - @methods.each do |meth|
+    li= link_to meth.fullname, meth.path(@language)

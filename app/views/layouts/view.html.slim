@@ -1,20 +1,22 @@
-- content_for :header do
+#header
   #search
     input#search-box type="text"
     a href="/"
       | /
+  #menu
+    = select_tag "language", options_for_select(language_options, current_language)
 
-- content_for :content do
+#content
   #left
     h2 Built-in
     ul
       - @modules.each do |mod|
-        li= link_to mod.name, show_module_path(mod)
+        li= link_to mod.name, mod.path(@language)
 
     h2 Standard library
     ul
       - @libraries.each do |lib|
-        li= link_to lib.name, show_library_path(lib)
+        li= link_to lib.name, lib.path(@language)
     br
 
   #right

@@ -14,8 +14,8 @@ class Entry < ActiveRecord::Base
     ModuleEntry.where(library_id: Entry["_builtin"].id).
           order(:name).
           select{|m|
-      m.superclass.nil? or m.superclass == Entry["_builtin;Object"]
-    }
+            !m.is_a?(ClassEntry) || m.superclass == Entry["_builtin;Object"]
+          }
   end
 
   def self.libraries

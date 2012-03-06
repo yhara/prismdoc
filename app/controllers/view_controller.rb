@@ -1,6 +1,6 @@
 class ViewController < ApplicationController
   before_filter :set_language, :prepare_menu
-  layout "split"
+  layout "view"
 
   def show_library
     find_entry(params[:library]) do |entry|
@@ -11,10 +11,10 @@ class ViewController < ApplicationController
   end
 
   def show_module
-    find_entry(params[:module]) do |entry|
+    find_entry("#{params[:library]};#{params[:module]}") do |entry|
       @entry = entry
       @document = find_document(@entry)
-      @methods = Entry.where("fullname LIKE ?", @entry.fullname + "%")
+      @methods = @entry.methods
     end
   end
 

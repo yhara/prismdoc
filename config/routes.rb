@@ -3,16 +3,14 @@ RubyApi::Application.routes.draw do
 
   rexp_lang = /\w\w(-\w\w)?/
 
-  get ":lang/:module/.:name" => "view#show_class_method",
-    :lang => rexp_lang
-  get ":lang/:module/:name" => "view#show_instance_method",
-    :lang => rexp_lang
-  get ":lang/:library"       => "view#show_library",
-    :lang => rexp_lang, :library => /English|Win32API/
-  get ":lang/:library"       => "view#show_library",
-    :lang => rexp_lang, :library => /[a-z].*/
-  get ":lang/:module"       => "view#show_module",
-    :lang => rexp_lang, :module => /[A-Z].*/
+  get ":lang/:library/:module/.:name" => "view#show_class_method"   , :lang => rexp_lang
+  get ":lang/:library/:module/:name"  => "view#show_instance_method", :lang => rexp_lang
+  get ":lang/:library/:module"        => "view#show_module"         , :lang => rexp_lang, :module => /[A-Z].*/
+  get ":lang/:library"                => "view#show_library"        , :lang => rexp_lang, :library => /[a-z].*/
+
+  get ":lang/:module/.:name" => "view#show_class_method"   , :lang => rexp_lang,                       :library => "_builtin"
+  get ":lang/:module/:name"  => "view#show_instance_method", :lang => rexp_lang,                       :library => "_builtin"
+  get ":lang/:module"        => "view#show_module"         , :lang => rexp_lang, :module => /[A-Z].*/, :library => "_builtin"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

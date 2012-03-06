@@ -18,14 +18,15 @@ module RubyApi
     end
 
     def extract_document(entry)
-      case entry.kind
-      when "library"
+      case entry
+      when LibraryEntry
         body = extract_library(entry.fullname)
-      when "class", "module"
-        body = extract_module(entry.fullname)
-      when "instance_method", "class_method"
+      when ModuleEntry
+        body = extract_module(entry.name)
+      when MethodEntry
         body = extract_method(entry.fullname)
-      when "constant"
+      when ConstantEntry
+        # TODO
       end
       PseudoDocument.new(body)
     end

@@ -8,16 +8,4 @@ html
     = csrf_meta_tags
 
   body
-    #header
-      - if content_for?(:header)
-        = yield :header
-      #menu
-        = select_tag "language", options_for_select(language_options, current_language)
-
-    #content
-      - if content_for?(:content)
-        = yield :content
-      - else
-        = yield
-
-    #footer
+    yield

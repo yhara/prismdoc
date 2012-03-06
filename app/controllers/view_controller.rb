@@ -1,6 +1,6 @@
 class ViewController < ApplicationController
   before_filter :set_language, :prepare_menu
-  layout "view/split"
+  layout "split"
 
   def show_library
     find_entry(params[:library]) do |entry|

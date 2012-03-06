@@ -33,13 +33,18 @@ class Entry < ActiveRecord::Base
     Entry.find_by_fullname!(fullname)
   end
 
-  def self.classes_modules
-    Entry.where(kind: ["class", "module"]).select{|m|
-      m.superclass.nil? or m.superclass == Entry["Object"]
+  def self.builtin_modules
+    Entry.where(library_id: Entry["_builtin"].id,
+                kind: ["class", "module"]).
+          order(:name).
+          select{|m|
+      m.superclass.nil? or m.superclass == Entry["_builtin;Object"]
     }
   end
 
   def self.libraries
-    Entry.where(kind: "library")
+    Entry.where(kind: "library").order(:fullname).select{|l|
+      not l.name.include?("/")
+    }
   end
 end

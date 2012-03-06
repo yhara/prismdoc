@@ -10,7 +10,7 @@ module RubyApi
       end
 
       def yard_cache
-        "/Users/yhara/r/ruby-1.9.3-p125/.yardoc_all/"
+        "/Users/yhara/r/ruby-1.9.3-p125/.yardoc_core/"
       end
     end
   end

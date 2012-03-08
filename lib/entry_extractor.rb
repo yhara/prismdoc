@@ -11,7 +11,8 @@ module RubyApi
     end
 
     def run
-      make_library_entries
+      #make_library_entries
+      make_builtin_methods
     end
 
     def make_library_entries
@@ -79,14 +80,57 @@ module RubyApi
       end
     end
 
+    def make_builtin_methods
+      builtin = db.libraries.find{|l| l.name == "_builtin"}
+      builtin.classes.each do |mod|
+        next if mod.type == :object
+        make_builtin_methods_of(mod)
+      end
+    end
+
     private
+
+    def make_builtin_methods_of(mod)
+      lib_entry = LibraryEntry[mod.library.name]
+      mod_entry = ModuleEntry["#{lib_entry.name};#{mod.name}"]
+
+      mod.entries.each do |meth|
+        # Skip methods defined by another library
+        next if meth.library != mod.library
+
+        attrs = {
+          name: meth.name,
+          module_id: mod_entry.id,
+          library_id: lib_entry.id,
+        }
+        case meth.typename
+        when :singleton_method, :module_function
+          attrs[:fullname] = "#{mod_entry.fullname}.#{meth.name}"
+          logger.debug "creating entry for #{attrs[:fullname]}"
+          SingletonMethodEntry.create(attrs)
+        when :instance_method
+          attrs[:fullname] = "#{mod_entry.fullname}##{meth.name}"
+          logger.debug "creating entry for #{attrs[:fullname]}"
+          logger.debug attrs.inspect
+          InstanceMethodEntry.create(attrs)
+        when :constant
+          attrs[:fullname] = "#{mod_entry.fullname}::#{meth.name}"
+          logger.debug "creating entry for #{attrs[:fullname]}"
+          ConstantEntry.create(attrs)
+        when :special_variable
+          # skip
+        else
+          raise "unknown typename: #{meth.typename}"
+        end
+      end
+    end
 
     def fullname_of(mod)
       mod.library.name.downcase + ";" + mod.name
     end
 
     def logger
-      Logger.new($stdout).tap{|l| l.level = Logger::INFO}
+      Logger.new($stdout).tap{|l| l.level = Logger::DEBUG}
     end
 
     # We need to make sure create BasicObject first 

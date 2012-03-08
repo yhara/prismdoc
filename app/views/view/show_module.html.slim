@@ -1,6 +1,18 @@
 h1= @entry.name
 pre== @document.body
 
+
+h2 Singleton methods
 ul
-  - @methods.each do |meth|
-    li= link_to meth.fullname, meth.path(@language)
+  - @singleton_methods.each do |meth|
+    li= link_to meth.name, meth.path(@language)
+
+h2 Instance methods
+ul
+  - @instance_methods.each do |meth|
+    li= link_to meth.name, meth.path(@language)
+
+h2 Constants
+ul
+  - @constants.each do |con|
+    li= link_to con.name, con.path(@language)

@@ -24,9 +24,9 @@ module RubyApi
       when ModuleEntry
         body = extract_module(entry.name)
       when MethodEntry
-        body = extract_method(entry.fullname)
+        body = extract_method(entry)
       when ConstantEntry
-        # TODO
+        body = extract_constant(entry)
       end
       PseudoDocument.new(body)
     end
@@ -45,8 +45,12 @@ module RubyApi
         registry[name].docstring
       end
 
-      def extract_method(name)
-        registry[name].docstring
+      def extract_method(entry)
+        registry[entry.fullname.sub(/_builtin;/,"")].docstring
+      end
+
+      def extract_constant(entry)
+        registry[entry.fullname.sub(/_builtin;/,"")].docstring
       end
 
       private
@@ -123,8 +127,16 @@ module RubyApi
         }
       end
 
-      def extract_method(name)
-        raise
+      def extract_method(entry)
+        with_bitclust_view{|v|
+          q = BitClust::MethodNamePattern.new(
+            entry.module.name,
+            (entry == SingletonMethodEntry ? "." : "#"),
+            entry.name
+          )
+          v.show_method db.search_methods(q)
+          v.buf.join
+        }
       end
     end
 

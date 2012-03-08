@@ -1,8 +1,8 @@
-h1= @entry.fullname
+h1= @entry.name
 - if @document
   pre== @document.body
 - else
   div No doc available!
 
 ul
-  li= link_to @entry.class_name, show_module_path(@entry.class_name, @language)
+  li= link_to @entry.module.name, @entry.module.path(@language)

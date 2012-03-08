@@ -14,19 +14,21 @@ class ViewController < ApplicationController
     find_entry("#{params[:library]};#{params[:module]}") do |entry|
       @entry = entry
       @document = find_document(@entry)
-      @methods = @entry.methods
+      @singleton_methods = @entry.singleton_methods
+      @instance_methods = @entry.instance_methods
+      @constants = @entry.constants
     end
   end
 
   def show_class_method
-    find_entry("#{params[:module]}.#{params[:name]}") do |entry|
+    find_entry("#{params[:library]};#{params[:module]}.#{params[:name]}") do |entry|
       @entry = entry
       @document = find_document(@entry)
     end
   end
 
   def show_instance_method
-    find_entry("#{params[:module]}##{params[:name]}") do |entry|
+    find_entry("#{params[:library]};#{params[:module]}##{params[:name]}") do |entry|
       @entry = entry
       @document = find_document(@entry)
     end

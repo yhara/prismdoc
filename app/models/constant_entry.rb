@@ -4,6 +4,6 @@ class ConstantEntry < Entry
 
   def path(language)
     self.module.path(language) +
-      "/" + "." + Rack::Utils.escape(self.name)
+      "/" + "::" + Rack::Utils.escape(self.name)
   end
 end

@@ -33,10 +33,12 @@ module RubyApi
 
     def with_bitclust_view(&block)
       compiler = BitClust::Plain.new
-      yield BitClust::TerminalView.new(compiler,
-                                       describe_all: false,
-                                       line: false,
-                                       encoding: nil)
+      view = BitClust::TerminalView.new(compiler,
+                                        describe_all: false,
+                                        line: false,
+                                        encoding: nil)
+      yield view
+      view.buf.join
     end
   end
 end

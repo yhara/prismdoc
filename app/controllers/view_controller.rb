@@ -34,6 +34,13 @@ class ViewController < ApplicationController
     end
   end
 
+  def show_constant
+    find_entry("#{params[:library]};#{params[:module]}::#{params[:name]}") do |entry|
+      @entry = entry
+      @document = find_document(@entry)
+    end
+  end
+
   private
 
   def set_language

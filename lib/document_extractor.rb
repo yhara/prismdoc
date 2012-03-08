@@ -123,7 +123,6 @@ module RubyApi
       def extract_module(name)
         with_bitclust_view{|v|
           v.show_class db.search_classes(name)
-          v.buf.join
         }
       end
 
@@ -135,7 +134,15 @@ module RubyApi
             entry.name
           )
           v.show_method db.search_methods(q)
-          v.buf.join
+        }
+      end
+
+      def extract_constant(entry)
+        with_bitclust_view{|v|
+          q = BitClust::MethodNamePattern.new(
+            entry.module.name, "::", entry.name
+          )
+          v.show_method db.search_methods(q)
         }
       end
     end

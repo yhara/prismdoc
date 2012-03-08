@@ -32,7 +32,13 @@ class Entry < ActiveRecord::Base
 
   def self.libraries
     LibraryEntry.order(:fullname).select{|l|
-      not l.name.include?("/")
-    }
+      not l.name.include?("/") and
+      not l.name == "_builtin"
+    }.inject({}) do |h, l|
+      h[l] = l.modules.sort_by(&:name).inject({}){|h2, m| h2[m] = {}; h2}.merge(
+        LibraryEntry.where("name LIKE '#{l.name}/%'").sort_by(&:name).inject({}){|h2, m| h2[m] = {}; h2}
+      )
+      h
+    end
   end
 end

@@ -14,14 +14,14 @@
         ul
           - @modules[0].each do |mod|
             li= link_to mod.name, mod.path(@language)
-      #builtin-exceptions
+      #builtin_exceptions
         - render_tree(@modules[1]) do |mod|
           = link_to mod.name, mod.path(@language)
 
       h2 Standard library
-      ul
-        - @libraries.each do |lib|
-          li= link_to lib.name, lib.path(@language)
+      #standard_libraries
+        - render_tree(@libraries) do |lm|
+          = link_to lm.name, lm.path(@language)
       br
 
     #right

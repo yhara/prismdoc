@@ -14,7 +14,10 @@ $ ->
 
     false
 
-  $(".tree_button").each ->
+  $("#builtin_exceptions .tree_button").each ->
     if $(this).next().text().match(/^(SystemCallError|EncodingError|Exception)$/)
       $(this).click()
+
+  $("#standard_libraries .tree_button").each ->
+    $(this).click()
 

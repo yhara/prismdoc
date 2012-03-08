@@ -1,4 +1,5 @@
 class LibraryEntry < Entry
+  has_many :modules, class_name: "ModuleEntry", foreign_key: "library_id"
   def path(language)
     return "/" if self.name == "_builtin"
 

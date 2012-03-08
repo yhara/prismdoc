@@ -11,7 +11,8 @@ class Entry < ActiveRecord::Base
   end
 
   def self.builtin_modules
-    mods = ModuleEntry.where(library_id: Entry["_builtin"].id).to_a
+    mods = ModuleEntry.where(library_id: Entry["_builtin"].id).
+                       order(:name).to_a
     exception = mods.find{|m| m.name == "Exception"} or raise "Exception not found"
     mods.delete(exception)
 
@@ -24,8 +25,6 @@ class Entry < ActiveRecord::Base
       end
     }
     tree = {exception => build_tree[exception]}
-    require 'pp'
-    logger.debug(tree.pretty_inspect)
 
     [mods, tree]
   end

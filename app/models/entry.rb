@@ -17,8 +17,8 @@ class Entry < ActiveRecord::Base
     mods.delete(exception)
 
     build_tree = ->(parent){
-      children = mods.select{|m| m.is_a?(ClassEntry) and m.superclass == parent}
-      mods.reject!{|m| children.include?(m)}
+      children = mods.select{|m| m.is_a?(ClassEntry) and m.superclass_id == parent.id}
+      mods.replace(mods - children)
 
       children.inject({}) do |h, c|
         h[c] = build_tree[c]; h
@@ -30,7 +30,7 @@ class Entry < ActiveRecord::Base
   end
 
   def self.libraries
-    LibraryEntry.order(:fullname).select{|l|
+    LibraryEntry.includes(:modules).order(:fullname).select{|l|
       not l.name.include?("/") and
       not l.name == "_builtin"
     }.inject({}) do |h, l|

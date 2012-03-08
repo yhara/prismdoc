@@ -1,26 +1,31 @@
-#header
-  #search
-    input#search-box type="text"
-    a href="/"
-      | /
-  #menu
-    = select_tag "language", options_for_select(language_options, current_language)
+- content_for :body do
+  #header
+    #search
+      input#search-box type="text"
+      a href="/"
+        | /
+    #menu
+      = select_tag "language", options_for_select(language_options, current_language)
 
-#content
-  #left
-    h2 Built-in
-    ul
-      - @modules.each do |mod|
-        li= link_to mod.name, mod.path(@language)
+  #content
+    #left
+      h2 Built-in
+      #builtin-modules
+        ul
+          - @modules[0].each do |mod|
+            li= link_to mod.name, mod.path(@language)
+      #builtin-exceptions
+        - render_tree(@modules[1]) do |mod|
+          = link_to mod.name, mod.path(@language)
 
-    h2 Standard library
-    ul
-      - @libraries.each do |lib|
-        li= link_to lib.name, lib.path(@language)
-    br
+      h2 Standard library
+      ul
+        - @libraries.each do |lib|
+          li= link_to lib.name, lib.path(@language)
+      br
 
-  #right
-    #body
-      = yield
+    #right
+      #body
+        = yield
 
 = render :template => 'layouts/application'

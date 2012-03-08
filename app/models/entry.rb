@@ -11,11 +11,23 @@ class Entry < ActiveRecord::Base
   end
 
   def self.builtin_modules
-    ModuleEntry.where(library_id: Entry["_builtin"].id).
-          order(:name).
-          select{|m|
-            !m.is_a?(ClassEntry) || m.superclass == Entry["_builtin;Object"]
-          }
+    mods = ModuleEntry.where(library_id: Entry["_builtin"].id).to_a
+    exception = mods.find{|m| m.name == "Exception"} or raise "Exception not found"
+    mods.delete(exception)
+
+    build_tree = ->(parent){
+      children = mods.select{|m| m.is_a?(ClassEntry) and m.superclass == parent}
+      mods.reject!{|m| children.include?(m)}
+
+      children.inject({}) do |h, c|
+        h[c] = build_tree[c]; h
+      end
+    }
+    tree = {exception => build_tree[exception]}
+    require 'pp'
+    logger.debug(tree.pretty_inspect)
+
+    [mods, tree]
   end
 
   def self.libraries

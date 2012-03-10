@@ -1,17 +1,18 @@
 require 'tsort'
-require 'logger'
 require 'bitclust_helper'
+require 'extractor_helper'
 
 module RubyApi
   class EntryExtractor
     include BitClustHelper
+    include ExtractorHelper
 
     def initialize
       @missing_superclass = []
     end
 
     def run
-      #make_library_entries
+      make_library_entries
       make_builtin_methods
     end
 
@@ -25,18 +26,17 @@ module RubyApi
       libs.unshift(libs.delete(libs.find{|l| l.name == "_builtin"}))
 
       libs.each do |lib|
-        # Note: downcasing for English.rb and Win32API.rb
-        name = lib.name.downcase
-        logger.debug "creating entry for library #{name}"
+        name = normalize_library_name(lib.name)
+        tlogger.debug "creating entry for library #{name}"
         Entry
         lib_entry = LibraryEntry.create!(fullname: name, name: name)
         make_module_entries(lib, lib_entry)
       end
 
-      logger.info "Setting suspended .superclass"
+      clogger.info "Setting suspended .superclass"
 
       @missing_superclass.each do |child, parent|
-        logger.debug "- #{child.name} < #{parent.name}"
+        clogger.debug "- #{child.name} < #{parent.name}"
         superentry = Entry[fullname_of(parent)]
         Entry[fullname_of(child)].update_attributes!(superclass: superentry)
       end
@@ -46,16 +46,16 @@ module RubyApi
     #
     def make_module_entries(library, lib_entry)
       mods = BitClustModules.new(library).tsort
-      logger.debug [library.name, mods.map(&:name)].inspect
+      clogger.debug [library.name, mods.map(&:name)].inspect
       mods.each do |m|
         case m.type
         when :class, :module
           if m.library != library
-            logger.warn "library #{library.name} defines #{fullname_of(m)}; skipping."
+            clogger.warn "library #{library.name} defines #{fullname_of(m)}; skipping."
             next
           end
 
-          logger.debug "creating entry for #{m.type} #{fullname_of(m)}"
+          clogger.debug "creating entry for #{m.type} #{fullname_of(m)}"
 
           if m.type == :module
             ModuleEntry.create!(fullname: fullname_of(m),
@@ -75,7 +75,7 @@ module RubyApi
                                library: lib_entry)
           end
         else
-          logger.warn "skipping #{m.type} #{m.name}"
+          clogger.warn "skipping #{m.type} #{m.name}"
         end
       end
     end
@@ -106,16 +106,16 @@ module RubyApi
         case meth.typename
         when :singleton_method, :module_function
           attrs[:fullname] = "#{mod_entry.fullname}.#{meth.name}"
-          logger.debug "creating entry for #{attrs[:fullname]}"
+          clogger.debug "creating entry for #{attrs[:fullname]}"
           SingletonMethodEntry.create(attrs)
         when :instance_method
           attrs[:fullname] = "#{mod_entry.fullname}##{meth.name}"
-          logger.debug "creating entry for #{attrs[:fullname]}"
-          logger.debug attrs.inspect
+          clogger.debug "creating entry for #{attrs[:fullname]}"
+          clogger.debug attrs.inspect
           InstanceMethodEntry.create(attrs)
         when :constant
           attrs[:fullname] = "#{mod_entry.fullname}::#{meth.name}"
-          logger.debug "creating entry for #{attrs[:fullname]}"
+          clogger.debug "creating entry for #{attrs[:fullname]}"
           ConstantEntry.create(attrs)
         when :special_variable
           # skip
@@ -126,11 +126,13 @@ module RubyApi
     end
 
     def fullname_of(mod)
-      mod.library.name.downcase + ";" + mod.name
+      normalize_library_name(mod.library.name) + ";" + mod.name
     end
 
-    def logger
-      Logger.new($stdout).tap{|l| l.level = Logger::DEBUG}
+    # Note: downcasing for English.rb and Win32API.rb
+    # We cannot just downcase it because of tkextlib/{ICONS, tkDND, tkHTML}
+    def normalize_library_name(name)
+      (name[0] =~ /[A-Z]/ ? name.downcase : name)
     end
 
     # We need to make sure create BasicObject first 

@@ -9,8 +9,10 @@ class Language < ActiveRecord::Base
     Language["English"]
   end
 
-  def self.[](english_name)
-    Language.find_by_english_name!(english_name)
+  def self.[](name)
+    Language.find_by_short_name(name) or
+    Language.find_by_english_name(name) or
+    Language.find_by_native_name!(name)
   end
 
   def self.from_short_name(short_name)

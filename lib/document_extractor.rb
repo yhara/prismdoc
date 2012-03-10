@@ -1,7 +1,10 @@
 require 'bitclust_helper'
+require 'extractor_helper'
 
 module RubyApi
   class DocumentExtractor
+    include ExtractorHelper
+
     def self.for(language)
       case language.short_name
       when "en" then YardExtractor
@@ -10,6 +13,7 @@ module RubyApi
       end
     end
 
+    # Not an instance of Document, but acts like them.
     class PseudoDocument
       def initialize(body)
         @body = body
@@ -20,9 +24,9 @@ module RubyApi
     def extract_document(entry)
       case entry
       when LibraryEntry
-        body = extract_library(entry.fullname)
+        body = extract_library(entry)
       when ModuleEntry
-        body = extract_module(entry.name)
+        body = extract_module(entry)
       when MethodEntry
         body = extract_method(entry)
       when ConstantEntry
@@ -32,26 +36,39 @@ module RubyApi
     end
 
     class YardExtractor < DocumentExtractor
-      def extract_library(name)
-        path = File.join(DocumentSource.ruby_src, "lib", "#{name}.rb")
+      def extract_library(entry)
+        return "(not yet)"
+
+        path = File.join(DocumentSource.ruby_src, "lib", "#{entry.name}.rb")
         if File.exist?(path)
           File.read(path).lines.grep(/^\s*#/).join("<br/>")
         else
-          name
+          entry.name
         end
       end
 
-      def extract_module(name)
-        registry[name].docstring
+      def extract_module(entry)
+        return "(not yet)" if entry.library.name != "_builtin"
+
+        case entry.name
+        when "Struct::Tms", /Errno::/ then "no doc available"
+        else
+          registry[entry.name].docstring
+        end
       end
 
       def extract_method(entry)
-        registry[entry.fullname.sub(/_builtin;/,"")].docstring
+        return "(not yet)" if entry.library.name != "_builtin"
+
+        if item = registry[entry.belong_name]
+          item.docstring
+        else
+          clogger.warn("no doc for #{entry.fullname}")
+          "(no rdoc entry found)"
+        end
       end
 
-      def extract_constant(entry)
-        registry[entry.fullname.sub(/_builtin;/,"")].docstring
-      end
+      alias extract_constant extract_method
 
       private
       def registry
@@ -80,9 +97,8 @@ module RubyApi
         @yard_extractor = YardExtractor.new
       end
 
-      def extract_module(name)
-      self.class.init
-        orig = @yard_extractor.extract_module(name)
+      def extract_module(entry)
+        orig = @yard_extractor.extract_module(entry.name)
         Rails.logger.debug([:orig, orig].inspect)
         translate(orig)
       end
@@ -113,16 +129,22 @@ module RubyApi
     class BitClustExtractor < DocumentExtractor
       include BitClustHelper
 
-      def extract_library(name)
-        lib = db.libraries.find{|l| l.name == name}
-        raise ArgumentError, "library #{name} not found" unless lib
+      def extract_library(entry)
+        lib = db.libraries.find{|l|
+          case entry.name
+          when "english" then (l.name == "English")
+          when "win32api" then (l.name == "Win32API")
+          else l.name == entry.name
+          end
+        }
+        raise ArgumentError, "library #{entry.name} not found" unless lib
 
         lib.source
       end
 
-      def extract_module(name)
+      def extract_module(entry)
         with_bitclust_view{|v|
-          v.show_class db.search_classes(name)
+          v.show_class db.search_classes(entry.name)
         }
       end
 

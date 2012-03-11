@@ -63,9 +63,9 @@ class ViewController < ApplicationController
   # May return nil
   def find_document(entry)
     load './lib/document_extractor.rb'
-    RubyApi::DocumentExtractor.for(@language).new.extract_document(entry)
+    #RubyApi::DocumentExtractor.for(@language).extract_document(entry)
 
-#    Document.where(entry_id: entry.id,
-#                   language_id: @language.id).first
+    Document.where(entry_id: entry.id,
+                   language_id: @language.id).first
   end
 end

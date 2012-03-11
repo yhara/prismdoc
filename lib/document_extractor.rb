@@ -7,9 +7,9 @@ module RubyApi
 
     def self.for(language)
       case language.short_name
-      when "en" then YardExtractor
-      when "ja" then BitClustExtractor
-      else TranslationExtractor
+      when "en" then YardExtractor.new
+      when "ja" then BitClustExtractor.new
+      else TranslationExtractor.new(language)
       end
     end
 
@@ -79,28 +79,30 @@ module RubyApi
     class TranslationExtractor < DocumentExtractor
       include FastGettext::Translation
 
-      def self.init
-        @init ||= begin
+      def self.init(short_name)
+        @init ||= {}
+        @init[short_name] ||= begin
           FastGettext.add_text_domain('yard',
             path: "#{DocumentSource.ruby_src}/locale/",
             type: :po)
           FastGettext.text_domain = 'yard'
-          FastGettext.locale = 'cp'
+          FastGettext.locale = short_name
           true
         end
       end
 
-      def initialize
-        super
-
-        self.class.init
+      def initialize(language)
+        self.class.init(language.short_name)
         @yard_extractor = YardExtractor.new
       end
 
-      def extract_module(entry)
-        orig = @yard_extractor.extract_module(entry.name)
-        Rails.logger.debug([:orig, orig].inspect)
-        translate(orig)
+      %w(library module method constant).each do |type|
+        class_eval <<-EOD
+          def extract_#{type}(entry)
+            orig = @yard_extractor.extract_#{type}(entry)
+            translate(orig)
+          end
+        EOD
       end
 
       private
@@ -113,7 +115,6 @@ module RubyApi
           case type
           when :paragraph
             paragraph, = *args
-            Rails.logger.debug([:paragraph, paragraph].inspect)
             translated_data << _(paragraph)
           when :empty_line
             line, = *args

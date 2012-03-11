@@ -19,7 +19,7 @@ namespace :import do
     language = Language[ENV["LANG"]]
     language_id = language.id
 
-    extractor = RubyApi::DocumentExtractor.for(language).new
+    extractor = RubyApi::DocumentExtractor.for(language)
     Entry.all.each do |entry|
       begin
         puts "creating document for #{entry.type} #{entry.fullname}"

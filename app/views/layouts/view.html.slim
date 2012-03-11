@@ -9,19 +9,23 @@
 
   #content
     #left
-      h2= t('view.built_in_library')
-      #builtin-modules
-        ul
-          - @modules[0].each do |mod|
-            li= link_to mod.name, mod.path(@language)
-      #builtin_exceptions
-        - render_tree(@modules[1]) do |mod|
-          = link_to mod.name, mod.path(@language)
+      #left_contents
+        h2= t('view.built_in_library')
+        #builtin-modules
+          ul
+            - @modules[0].each do |mod|
+              li= link_to mod.name, mod.path(@language)
+        #builtin_exceptions
+          - render_tree(@modules[1]) do |mod|
+            = link_to mod.name, mod.path(@language)
 
-      h2= t("view.standard_library")
-      #standard_libraries
-        - render_tree(@libraries) do |lm|
-          = link_to lm.name, lm.path(@language)
+        h2= t("view.standard_library")
+        #standard_libraries
+          - render_tree(@libraries) do |lm|
+            = link_to lm.name, lm.path(@language)
+        
+      ul#search_result
+
       br
 
     #right

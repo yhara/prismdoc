@@ -9,6 +9,10 @@ class ModuleEntry < Entry
   has_many :constants, class_name: "ConstantEntry",
     foreign_key: "module_id"
 
+  def belong_name
+    self.name
+  end
+
   def path(language)
     self.library.path(language) +
       "/" + Rack::Utils.escape(self.name)

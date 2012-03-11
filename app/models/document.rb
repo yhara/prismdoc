@@ -7,6 +7,6 @@ class Document < ActiveRecord::Base
                          scope: :language_id,
                          message: "already has a Document for the language"
                        }
-  validates :language, presence: true
+  validates :language_id, presence: true
 end
 

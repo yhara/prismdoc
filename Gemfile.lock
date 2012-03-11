@@ -1,5 +1,5 @@
 GIT
-  remote: file:///Users/yhara/Dropbox/proj/prismdoc/yard
+  remote: git://github.com/yhara/yard.git
   revision: b288d9982561536e13c267011983f00d50bced03
   branch: i18n
   specs:

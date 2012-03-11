@@ -43,12 +43,12 @@ class ViewController < ApplicationController
 
   private
 
+  def pjax?
+   request.headers['X-PJAX']
+  end
+
   def set_layout
-     if request.headers['X-PJAX']
-       false
-     else
-       "view"
-     end
+   if pjax? then false else "view" end
   end
 
   def set_language
@@ -56,8 +56,10 @@ class ViewController < ApplicationController
   end
 
   def prepare_menu
-    @modules = Entry.builtin_modules
-    @libraries = Entry.libraries
+    unless pjax?
+      @modules = Entry.builtin_modules
+      @libraries = Entry.libraries
+    end
   end
 
   def find_entry(fullname)

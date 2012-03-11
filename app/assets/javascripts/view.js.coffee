@@ -28,7 +28,7 @@ init_search = ->
     $.grep PrismDoc.index, (name) ->
       name.toLowerCase().indexOf(q) != -1
 
-  href_for = (name) ->
+  href_to = (name) ->
     lang = location.pathname.match(/^\/([^\/]*)\//)[1]
     match = name.match(/([A-Za-z:]+)([\.\#])(.*)/)
     if match
@@ -44,7 +44,7 @@ init_search = ->
   make_li = (name, is_even) ->
     klass = if is_even then "even" else "odd"
     li = $('<li class="'+klass+'"><a></a></li>')
-    li.find('a').attr('href', href_for(name))
+    li.find('a').attr('href', href_to(name))
     li.find('a').text(name)
     li
 
@@ -55,7 +55,6 @@ init_search = ->
     _q = q
 
     if q
-      console.log(q)
       $('#left_contents').hide()
       ul = $('#search_result')
       ul.empty()
@@ -70,14 +69,17 @@ init_search = ->
 
   $.getJSON "/index.json", (data) ->
     PrismDoc.index = data
-    console.log PrismDoc.index[0]
-
   $('#search-box').keyup ->
     suggest()
   $('#search-box').focus ->
     $(this).select()
 
+init_pjax = ->
+  $('a').pjax('#doc', timeout: 2000)
+  console.log("Ok")
+
 $ ->
   init_tree_button()
   init_search()
+  init_pjax()
 

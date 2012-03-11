@@ -1,6 +1,6 @@
 class ViewController < ApplicationController
   before_filter :set_language, :prepare_menu
-  layout "view"
+  layout :set_layout
 
   def show_library
     find_entry(params[:library]) do |entry|
@@ -42,6 +42,14 @@ class ViewController < ApplicationController
   end
 
   private
+
+  def set_layout
+     if request.headers['X-PJAX']
+       false
+     else
+       "view"
+     end
+  end
 
   def set_language
     @language = Language.from_short_name(params[:lang])

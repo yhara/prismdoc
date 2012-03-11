@@ -6,6 +6,8 @@ gem 'fast_gettext'
 
 gem 'rails', '3.2.1'
 
+gem 'i18n_generators'
+
 # Model
 #gem 'sqlite3', group: :development
 gem 'pg'

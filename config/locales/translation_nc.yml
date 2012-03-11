@@ -1,0 +1,85 @@
+nc:
+  activerecord:
+    models:
+      entry: entry  #g
+      module_entry: module_entry  #g
+      class_entry: class_entry  #g
+      constant_entry: constant_entry  #g
+      method_entry: method_entry  #g
+      instance_method_entry: instance_method_entry  #g
+      singleton_method_entry: singleton_method_entry  #g
+      library_entry: library_entry  #g
+      document: document  #g
+      language: language  #g
+
+    attributes:
+      entry:
+        name: name  #g
+        fullname: fullname  #g
+        documents: documents  #g
+
+      module_entry:
+        name: name  #g
+        fullname: fullname  #g
+        documents: documents  #g
+        library: library  #g
+        methods: methods  #g
+        singleton_methods: singleton_methods  #g
+        instance_methods: instance_methods  #g
+        constants: constants  #g
+
+      class_entry:
+        name: name  #g
+        fullname: fullname  #g
+        documents: documents  #g
+        library: library  #g
+        methods: methods  #g
+        singleton_methods: singleton_methods  #g
+        instance_methods: instance_methods  #g
+        constants: constants  #g
+        superclass: superclass  #g
+
+      constant_entry:
+        name: name  #g
+        fullname: fullname  #g
+        documents: documents  #g
+        library: library  #g
+        module: module  #g
+
+      method_entry:
+        name: name  #g
+        fullname: fullname  #g
+        documents: documents  #g
+        library: library  #g
+        module: module  #g
+
+      instance_method_entry:
+        name: name  #g
+        fullname: fullname  #g
+        documents: documents  #g
+        library: library  #g
+        module: module  #g
+
+      singleton_method_entry:
+        name: name  #g
+        fullname: fullname  #g
+        documents: documents  #g
+        library: library  #g
+        module: module  #g
+
+      library_entry:
+        name: name  #g
+        fullname: fullname  #g
+        documents: documents  #g
+        modules: modules  #g
+
+      document:
+        body: body  #g
+        entry: entry  #g
+        language: language  #g
+
+      language:
+        english_name: english_name  #g
+        native_name: native_name  #g
+        short_name: short_name  #g
+        documents: documents  #g

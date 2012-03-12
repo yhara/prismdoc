@@ -26,12 +26,17 @@ init_tree_button = ->
 init_search = ->
   search_class_or_methods = (q) ->
     $.grep PrismDoc.index, (name) ->
-      name.toLowerCase().indexOf(q) != -1
+      if q.match(/[A-Z]/)
+        name.indexOf(q) != -1
+      else
+        name.toLowerCase().indexOf(q) != -1
 
   search_in_class = (cname, mname, type='(\\.|#|::)') ->
-    console.log([cname, mname, type])
     $.grep PrismDoc.index, (name) ->
-      name.toLowerCase().match(new RegExp(cname+'(.*)'+type+'(.*)'+mname))
+      if cname.match(/[A-Z]/)
+        name.match(new RegExp(cname+'(.*)'+type+'(.*)'+mname))
+      else
+        name.toLowerCase().match(new RegExp(cname+'(.*)'+type+'(.*)'+mname))
 
   search = (q) ->
     if q.indexOf(".") != -1
@@ -94,7 +99,6 @@ init_search = ->
 
 init_pjax = ->
   $('a').pjax('#doc', timeout: 2000)
-  console.log("Ok")
 
 $ ->
   init_tree_button()

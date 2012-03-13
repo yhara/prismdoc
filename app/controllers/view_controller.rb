@@ -2,6 +2,10 @@ class ViewController < ApplicationController
   before_filter :set_language, :prepare_menu
   layout :set_layout
 
+  def show_language_top
+    # render view
+  end
+
   def show_library
     find_entry(params[:library]) do |entry|
       @entry = entry

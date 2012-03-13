@@ -14,6 +14,8 @@ RubyApi::Application.routes.draw do
   get ":lang/:module/:name"   => "view#show_instance_method", :lang => rexp_lang,                       :library => "_builtin"
   get ":lang/:module"         => "view#show_module"         , :lang => rexp_lang, :module => /[A-Z].*/, :library => "_builtin"
 
+  get ":lang" => "view#show_language_top", :lang => rexp_lang
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

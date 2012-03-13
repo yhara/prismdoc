@@ -4,7 +4,8 @@
       input#search-box type="text"
       a href="/"
         | /
-    #menu
+    #selectors
+      = select_tag "version", options_for_select({"Ruby 1.9.3" => "193"}, "193")
       = select_tag "language", options_for_select(language_options, current_language)
 
   #content

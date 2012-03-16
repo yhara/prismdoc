@@ -24,7 +24,7 @@ namespace :import do
     if version.nil?
       puts "version #{ENV["VER"]} does not exist. create now? [y/n]"
       if $stdin.gets.chomp == "y"
-        version = Version.create(name: ENV["VER"])
+        version = Version.create!(name: ENV["VER"])
       else
         exit
       end

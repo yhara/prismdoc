@@ -8,5 +8,6 @@ class Document < ActiveRecord::Base
                          message: "already has a Document for the language"
                        }
   validates :language_id, presence: true
+  validates :version_id, presence: true
 end
 

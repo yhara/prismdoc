@@ -11,12 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120128173400) do
+ActiveRecord::Schema.define(:version => 20120316113752) do
 
   create_table "documents", :force => true do |t|
     t.integer "entry_id"
     t.integer "language_id"
     t.text    "body"
+    t.integer "version_id"
   end
 
   create_table "entries", :force => true do |t|
@@ -32,6 +33,10 @@ ActiveRecord::Schema.define(:version => 20120128173400) do
     t.string "english_name"
     t.string "native_name"
     t.string "short_name"
+  end
+
+  create_table "versions", :force => true do |t|
+    t.string "name"
   end
 
 end

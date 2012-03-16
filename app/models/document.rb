@@ -4,8 +4,8 @@ class Document < ActiveRecord::Base
 
   validates :entry_id, presence: true,
                        uniqueness: {
-                         scope: :language_id,
-                         message: "already has a Document for the language"
+                         scope: [:language_id, :version_id],
+                         message: "already has a Document for the language and version"
                        }
   validates :language_id, presence: true
   validates :version_id, presence: true

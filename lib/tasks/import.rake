@@ -25,11 +25,13 @@ namespace :import do
       puts "version #{ENV["VER"]} does not exist. create now? [y/n]"
       if $stdin.gets.chomp == "y"
         version = Version.create(name: ENV["VER"])
+      else
+        exit
       end
     end
     version_id = version.id
 
-    extractor = RubyApi::DocumentExtractor.for(language)
+    extractor = RubyApi::DocumentExtractor.for(language, version)
     Entry.all.each do |entry|
       begin
         puts "creating document for #{entry.type} #{entry.fullname}"

@@ -5,11 +5,11 @@ module RubyApi
   class DocumentExtractor
     include ExtractorHelper
 
-    def self.for(language)
+    def self.for(language, version)
       case language.short_name
-      when "en" then YardExtractor.new
-      when "ja" then BitClustExtractor.new
-      else TranslationExtractor.new(language)
+      when "en" then YardExtractor.new(version)
+      when "ja" then BitClustExtractor.new(version)
+      else TranslationExtractor.new(language, version)
       end
     end
 
@@ -19,6 +19,10 @@ module RubyApi
         @body = body
       end
       attr_reader :body
+    end
+
+    def initialize(version)
+      @ver = version.name
     end
 
     def extract_document(entry)
@@ -39,7 +43,7 @@ module RubyApi
       def extract_library(entry)
         return "(not yet)"
 
-        path = File.join(DocumentSource.ruby_src, "lib", "#{entry.name}.rb")
+        path = File.join(DocumentSource.ruby_src(@ver), "lib", "#{entry.name}.rb")
         if File.exist?(path)
           File.read(path).lines.grep(/^\s*#/).join("<br/>")
         else
@@ -50,10 +54,8 @@ module RubyApi
       def extract_module(entry)
         return "(not yet)" if entry.library.name != "_builtin"
 
-        case entry.name
-        when "Struct::Tms", /Errno::/ then "no doc available"
-        else
-          registry[entry.name].docstring
+        if item = registry[entry.name]
+          item.docstring
         end
       end
 
@@ -62,9 +64,6 @@ module RubyApi
 
         if item = registry[entry.belong_name]
           item.docstring
-        else
-          clogger.warn("no doc for #{entry.fullname}")
-          "(no rdoc entry found)"
         end
       end
 
@@ -72,7 +71,7 @@ module RubyApi
 
       private
       def registry
-        @registry ||= YARD::Registry.load(DocumentSource.yard_cache)
+        @registry ||= YARD::Registry.load(DocumentSource.yard_cache(@ver))
       end
     end
 
@@ -83,7 +82,7 @@ module RubyApi
         @init ||= {}
         @init[short_name] ||= begin
           FastGettext.add_text_domain('yard',
-            path: "#{DocumentSource.ruby_src}/locale/",
+            path: "#{DocumentSource.ruby_src(@ver)}/locale/",
             type: :po)
           FastGettext.text_domain = 'yard'
           FastGettext.locale = short_name
@@ -91,7 +90,8 @@ module RubyApi
         end
       end
 
-      def initialize(language)
+      def initialize(language, version)
+        super(version)
         self.class.init(language.short_name)
         @yard_extractor = YardExtractor.new
       end
@@ -100,7 +100,7 @@ module RubyApi
         class_eval <<-EOD
           def extract_#{type}(entry)
             orig = @yard_extractor.extract_#{type}(entry)
-            translate(orig)
+            orig && translate(orig)
           end
         EOD
       end
@@ -131,22 +131,26 @@ module RubyApi
       include BitClustHelper
 
       def extract_library(entry)
-        lib = db.libraries.find{|l|
+        lib = db(@ver).libraries.find{|l|
           case entry.name
           when "english" then (l.name == "English")
           when "win32api" then (l.name == "Win32API")
           else l.name == entry.name
           end
         }
-        raise ArgumentError, "library #{entry.name} not found" unless lib
-
-        lib.source
+        if lib
+          lib.source
+        else
+          nil
+        end
       end
 
       def extract_module(entry)
         with_bitclust_view{|v|
-          v.show_class db.search_classes(entry.name)
+          v.show_class db(@ver).search_classes(entry.name)
         }
+      rescue BitClust::ClassNotFound
+        nil
       end
 
       def extract_method(entry)
@@ -156,8 +160,10 @@ module RubyApi
             (entry == SingletonMethodEntry ? "." : "#"),
             entry.name
           )
-          v.show_method db.search_methods(q)
+          v.show_method db(@ver).search_methods(q)
         }
+      rescue BitClust::MethodNotFound
+        nil
       end
 
       def extract_constant(entry)
@@ -165,8 +171,10 @@ module RubyApi
           q = BitClust::MethodNamePattern.new(
             entry.module.name, "::", entry.name
           )
-          v.show_method db.search_methods(q)
+          v.show_method db(@ver).search_methods(q)
         }
+      rescue BitClust::MethodNotFound
+        nil
       end
     end
 

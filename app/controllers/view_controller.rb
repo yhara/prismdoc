@@ -1,5 +1,5 @@
 class ViewController < ApplicationController
-  before_filter :set_language, :prepare_menu
+  before_filter :set_language, :set_version, :prepare_menu
   layout :set_layout
 
   def show_language_top
@@ -59,6 +59,10 @@ class ViewController < ApplicationController
     @language = Language.from_short_name(params[:lang])
   end
 
+  def set_version
+    @version = Version[params[:version]]
+  end
+
   def prepare_menu
     unless pjax?
       @modules = Entry.builtin_modules
@@ -80,6 +84,7 @@ class ViewController < ApplicationController
     #RubyApi::DocumentExtractor.for(@language).extract_document(entry)
 
     Document.where(entry_id: entry.id,
-                   language_id: @language.id).first
+                   language_id: @language.id,
+                   version_id: @version.id).first
   end
 end

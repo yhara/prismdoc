@@ -1,20 +1,22 @@
 RubyApi::Application.routes.draw do
   root to: "top#index"
 
-  rexp_lang = /\w\w(-\w\w)?/
+  lang = /\w\w(-\w\w)?/
+  ver = /\d.\d.\d/
+  lib = /[a-z].*/
 
-  get ":lang/:library/:module/:::name" => "view#show_constant"       , :lang => rexp_lang
-  get ":lang/:library/:module/.:name"  => "view#show_class_method"   , :lang => rexp_lang
-  get ":lang/:library/:module/:name"   => "view#show_instance_method", :lang => rexp_lang
-  get ":lang/:library/:module"         => "view#show_module"         , :lang => rexp_lang, :module => /[A-Z].*/
-  get ":lang/:library"                 => "view#show_library"        , :lang => rexp_lang, :library => /[a-z].*/
+  get ":lang/:version/:library/:module/:::name" => "view#show_constant"       , :lang => lang, :version => ver, :library => lib
+  get ":lang/:version/:library/:module/.:name"  => "view#show_class_method"   , :lang => lang, :version => ver, :library => lib
+  get ":lang/:version/:library/:module/:name"   => "view#show_instance_method", :lang => lang, :version => ver, :library => lib
+  get ":lang/:version/:library/:module"         => "view#show_module"         , :lang => lang, :version => ver, :library => lib
+  get ":lang/:version/:library"                 => "view#show_library"        , :lang => lang, :version => ver, :library => lib
 
-  get ":lang/:module/:::name" => "view#show_constant"       , :lang => rexp_lang,                       :library => "_builtin"
-  get ":lang/:module/.:name"  => "view#show_class_method"   , :lang => rexp_lang,                       :library => "_builtin"
-  get ":lang/:module/:name"   => "view#show_instance_method", :lang => rexp_lang,                       :library => "_builtin"
-  get ":lang/:module"         => "view#show_module"         , :lang => rexp_lang, :module => /[A-Z].*/, :library => "_builtin"
+  get ":lang/:version/:module/:::name" => "view#show_constant"       , :lang => lang, :version => ver, :library => "_builtin"
+  get ":lang/:version/:module/.:name"  => "view#show_class_method"   , :lang => lang, :version => ver, :library => "_builtin"
+  get ":lang/:version/:module/:name"   => "view#show_instance_method", :lang => lang, :version => ver, :library => "_builtin"
+  get ":lang/:version/:module"         => "view#show_module"         , :lang => lang, :version => ver, :library => "_builtin"
 
-  get ":lang" => "view#show_language_top", :lang => rexp_lang
+  get ":lang" => "view#show_language_top", :lang => lang
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

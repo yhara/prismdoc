@@ -3,8 +3,9 @@ class Version < ActiveRecord::Base
 
   validates :name,   presence: true, uniqueness: true
 
-  def self.default
-    Language["English"]
+  def self.current
+    # TODO: add column :current
+    Version.first
   end
 
   def self.[](name)

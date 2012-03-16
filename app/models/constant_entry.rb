@@ -6,8 +6,8 @@ class ConstantEntry < Entry
     self.module.name + "::" + self.name
   end
 
-  def path(language)
-    self.module.path(language) +
+  def path(language, version)
+    self.module.path(language, version) +
       "/" + "::" + Rack::Utils.escape(self.name)
   end
 end

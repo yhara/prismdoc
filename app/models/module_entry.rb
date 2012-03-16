@@ -13,8 +13,8 @@ class ModuleEntry < Entry
     self.name
   end
 
-  def path(language)
-    self.library.path(language) +
+  def path(language, version)
+    self.library.path(language, version) +
       "/" + Rack::Utils.escape(self.name)
   end
 end

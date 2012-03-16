@@ -15,15 +15,15 @@
         #builtin-modules
           ul
             - @modules[0].each do |mod|
-              li= link_to mod.name, mod.path(@language)
+              li= link_to mod.name, mod.path(@language, @version)
         #builtin_exceptions
           - render_tree(@modules[1]) do |mod|
-            = link_to mod.name, mod.path(@language)
+            = link_to mod.name, mod.path(@language, @version)
 
         h2= t("view.standard_library")
         #standard_libraries
           - render_tree(@libraries) do |lm|
-            = link_to lm.name, lm.path(@language)
+            = link_to lm.name, lm.path(@language, @version)
         
       ul#search_result
 

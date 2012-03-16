@@ -5,4 +5,4 @@ h1= @entry.belong_name
   div No doc available!
 
 ul
-  li= link_to @entry.module.name, @entry.module.path(@language)
+  li= link_to @entry.module.name, @entry.module.path(@language, @version)

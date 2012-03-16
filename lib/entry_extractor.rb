@@ -7,7 +7,8 @@ module RubyApi
     include BitClustHelper
     include ExtractorHelper
 
-    def initialize
+    def initialize(ver)
+      @ver = ver
       @missing_superclass = []
     end
 
@@ -17,19 +18,19 @@ module RubyApi
     end
 
     def make_library_entries
-      libs = db.libraries.select{|l|
+      libs = db(@ver).libraries.select{|l|
         # TODO: handle sublibraries
         #not l.is_sublibrary #and ["_builtin", "set"].include?(l.name)
-        not %w(minitest/spec).include?(l.name) #TODO
+        not %w(minitest/spec irb/notifier).include?(l.name) #TODO
       }
       # _builtin should come first
       libs.unshift(libs.delete(libs.find{|l| l.name == "_builtin"}))
 
       libs.each do |lib|
         name = normalize_library_name(lib.name)
-        tlogger.debug "creating entry for library #{name}"
-        Entry
-        lib_entry = LibraryEntry.create!(fullname: name, name: name)
+        clogger.debug "creating entry for library #{name}"
+        lib_entry = Entry.where(name: name).first
+        lib_entry ||= LibraryEntry.create(fullname: name, name: name)
         make_module_entries(lib, lib_entry)
       end
 
@@ -58,7 +59,7 @@ module RubyApi
           clogger.debug "creating entry for #{m.type} #{fullname_of(m)}"
 
           if m.type == :module
-            ModuleEntry.create!(fullname: fullname_of(m),
+            ModuleEntry.create(fullname: fullname_of(m),
                                 name: m.name,
                                 library: lib_entry)
           else
@@ -69,7 +70,7 @@ module RubyApi
               superclass = nil
             end
 
-            ClassEntry.create!(fullname: fullname_of(m),
+            ClassEntry.create(fullname: fullname_of(m),
                                name: m.name,
                                superclass: superclass,
                                library: lib_entry)
@@ -81,7 +82,7 @@ module RubyApi
     end
 
     def make_builtin_methods
-      builtin = db.libraries.find{|l| l.name == "_builtin"}
+      builtin = db(@ver).libraries.find{|l| l.name == "_builtin"}
       builtin.classes.each do |mod|
         next if mod.type == :object
         make_builtin_methods_of(mod)

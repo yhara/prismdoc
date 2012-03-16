@@ -9,15 +9,25 @@ namespace :import do
                  entry_type: EntryType["class"])
   end
 
-  desc "import entries from bitclust"
+  desc "import entries from bitclust (VER=xx)"
   task :entries => :environment do
-    RubyApi::EntryExtractor.new.run
+    raise "VER not specified" unless ENV["VER"]
+    RubyApi::EntryExtractor.new(ENV["VER"]).run
   end
 
-  desc "import documents (LANG=xx)"
+  desc "import documents (LANG=xx VER=yy)"
   task :documents => :environment do
     language = Language[ENV["LANG"]]
     language_id = language.id
+
+    version = Version.where(name: ENV["VER"]).first
+    if version.nil?
+      puts "version #{ENV["VER"]} does not exist. create now? [y/n]"
+      if $stdin.gets.chomp == "y"
+        version = Version.create(name: ENV["VER"])
+      end
+    end
+    version_id = version.id
 
     extractor = RubyApi::DocumentExtractor.for(language)
     Entry.all.each do |entry|
@@ -26,6 +36,7 @@ namespace :import do
         body = extractor.extract_document(entry).body
         Document.create!(entry_id: entry.id,
                          language_id: language_id,
+                         version_id: version_id,
                          body: body)
       rescue Exception => ex
         puts "error occured (entry: #{entry.inspect})"

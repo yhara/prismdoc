@@ -24,9 +24,9 @@ module RubyApi
 
     private
 
-    def db
+    def db(ver)
       @db ||= begin
-        dblocation = URI.parse("file://#{DocumentSource.bitclust_db}")
+        dblocation = URI.parse("file://#{DocumentSource.bitclust_db(ver)}")
         BitClust::MethodDatabase.connect(dblocation)
       end
     end

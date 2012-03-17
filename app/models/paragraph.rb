@@ -7,4 +7,8 @@ class Paragraph < ActiveRecord::Base
   def documents
     @documents ||= Document.where("paragraph_id_list LIKE '% ? %'", self.id)
   end
+
+  def text
+    body or original.body
+  end
 end

@@ -1,5 +1,8 @@
 h1= @entry.name
-pre== @document ? @document.body : ""
+- if @document
+  pre== @document.text
+- else
+  div No doc available!
 
 
 h2 Singleton methods

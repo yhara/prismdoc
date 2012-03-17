@@ -1,8 +1,1 @@
-h1= @entry.belong_name
-- if @document
-  pre== @document.body
-- else
-  div No doc available!
-
-ul
-  li= link_to @entry.module.name, @entry.module.path(@language, @version)
+== render "show_method"

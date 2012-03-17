@@ -15,6 +15,7 @@ gem 'pg'
 
 # View
 gem 'slim-rails'
+gem 'active_decorator'
 
 # Assets
 group :assets do
@@ -31,5 +32,9 @@ end
 
 gem 'jquery-rails'
 
-gem 'pry-rails', :group => :development
+group :development do
+  gem 'pry-rails'
+  gem 'awesome_print'
+  gem "rails-erd"
+end
 

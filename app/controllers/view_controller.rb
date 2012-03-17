@@ -29,6 +29,8 @@ class ViewController < ApplicationController
       @entry = entry
       @document = find_document(@entry)
     end
+
+    render "show_method"
   end
 
   def show_instance_method
@@ -36,6 +38,8 @@ class ViewController < ApplicationController
       @entry = entry
       @document = find_document(@entry)
     end
+
+    render "show_method"
   end
 
   def show_constant
@@ -43,6 +47,8 @@ class ViewController < ApplicationController
       @entry = entry
       @document = find_document(@entry)
     end
+
+    render "show_method"
   end
 
   private

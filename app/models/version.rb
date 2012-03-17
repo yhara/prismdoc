@@ -3,6 +3,8 @@ class Version < ActiveRecord::Base
 
   validates :name,   presence: true, uniqueness: true
 
+  default_scope :order => "name DESC"
+
   def self.current
     # TODO: add column :current
     Version.first

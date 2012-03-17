@@ -1,0 +1,9 @@
+- case
+- when document.nil?
+  div No doc available!
+
+- when document.body
+  pre== document.body
+
+- else
+  = render partial: "paragraph", collection: document.paragraphs

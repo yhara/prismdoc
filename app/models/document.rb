@@ -23,5 +23,9 @@ class Document < ActiveRecord::Base
       Paragraph.find(id)
     }
   end
+
+  def translated?
+    paragraphs.all?(&:translated?)
+  end
 end
 

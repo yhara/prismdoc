@@ -1,8 +1,5 @@
 h1= @entry.belong_name
-- if @document
-  pre== @document.text
-- else
-  div No doc available!
+= render partial: "document", object: @document
 
 ul
   li= link_to @entry.module.name, @entry.module.path(@language, @version)

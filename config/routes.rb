@@ -1,6 +1,8 @@
 RubyApi::Application.routes.draw do
   root to: "top#index"
 
+  resources :paragraphs, only: [:update]
+
   lang = /\w\w(-\w\w)?/
   ver = /\d.\d.\d/
   lib = /[a-z].*/

@@ -8,6 +8,10 @@ class Paragraph < ActiveRecord::Base
     @documents ||= Document.where("paragraph_id_list LIKE '% ? %'", self.id)
   end
 
+  def translated?
+    !!body
+  end
+
   def text
     body or original.body
   end

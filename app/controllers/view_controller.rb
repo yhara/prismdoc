@@ -70,6 +70,7 @@ class ViewController < ApplicationController
   end
 
   def prepare_menu
+    #@modules = [[],[]]; @libraries = []; return
     unless pjax?
       @modules = Entry.builtin_modules
       @libraries = Entry.libraries

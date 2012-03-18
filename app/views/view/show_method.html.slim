@@ -2,4 +2,4 @@ h1= @entry.belong_name
 = render partial: "document", object: @document
 
 ul
-  li= link_to @entry.module.name, @entry.module.path(@language, @version)
+  li= render partial: "entry", object: @entry.module

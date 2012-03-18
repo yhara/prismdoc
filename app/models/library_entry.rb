@@ -11,4 +11,8 @@ class LibraryEntry < Entry
        end)
     ].join
   end
+
+  def belong_name
+    self.name
+  end
 end

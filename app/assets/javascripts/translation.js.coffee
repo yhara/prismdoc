@@ -1,6 +1,9 @@
 $ ->
-  $('.paragraph').click ->
-    $(this).children(".current_text").toggle()
-    $(this).children(".original_text").toggle()
-    $(this).children("form").toggle()
+  # Show edit form
+  $('.paragraph > .current_text, .paragraph > .original_text').click ->
+    para = $(this).closest(".paragraph")
+    $(para).children(".current_text").toggle()
+    $(para).children(".original_text").toggle()
+    $(para).children("form").toggle()
+
 

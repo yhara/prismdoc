@@ -1,4 +1,4 @@
-$ ->
+add_handlers = ->
   # Show edit form
   $('.paragraph > .current_text, .paragraph > .original_text').click ->
     para = $(this).closest(".paragraph")
@@ -22,3 +22,6 @@ $ ->
         alert("could not update translation: #{status}")
     false
 
+$ ->
+  add_handlers()
+  $(document).on('pjax:end', add_handlers)

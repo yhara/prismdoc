@@ -6,6 +6,8 @@ class Paragraph < ActiveRecord::Base
 
   attr_accessible :body
 
+  after_update :update_document_translated
+
   def documents
     @documents ||= Document.where("paragraph_id_list LIKE '% ? %'", self.id)
   end
@@ -16,5 +18,11 @@ class Paragraph < ActiveRecord::Base
 
   def text
     body or original.body
+  end
+
+  private
+
+  def update_document_translated
+    self.documents.each(&:update_translated)
   end
 end

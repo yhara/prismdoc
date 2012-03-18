@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120317050600) do
+ActiveRecord::Schema.define(:version => 20120318142620) do
 
   create_table "documents", :force => true do |t|
     t.integer "entry_id"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(:version => 20120317050600) do
     t.text    "body"
     t.integer "version_id"
     t.text    "paragraph_id_list"
+    t.string  "translated",        :default => "no", :null => false
   end
 
   create_table "entries", :force => true do |t|

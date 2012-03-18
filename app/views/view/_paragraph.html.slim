@@ -1,13 +1,14 @@
 .paragraph
   .current_text
-    div class=(paragraph.translated? ? "translated" : "not_translated")
-      pre= paragraph.text
+    pre class=(paragraph.translated? ? "translated" : "not_translated")
+      = paragraph.text
 
   .original_text.hidden
-    pre= paragraph.original.body
+    pre
+      = paragraph.original.body
 
   form.hidden
     textarea rows=10 cols=100
       = paragraph.text
-    input type="submit" value="save"
+    = submit_tag "save", class: "update_paragraph", data: {url: paragraph_path(paragraph)}
 

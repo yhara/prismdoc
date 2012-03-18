@@ -4,6 +4,8 @@ class Paragraph < ActiveRecord::Base
 
   validates :language_id, presence: true
 
+  attr_accessible :body
+
   def documents
     @documents ||= Document.where("paragraph_id_list LIKE '% ? %'", self.id)
   end

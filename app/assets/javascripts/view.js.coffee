@@ -53,16 +53,17 @@ init_search = ->
 
   href_to = (name) ->
     lang = location.pathname.match(/^\/([^\/]*)\//)[1]
+    ver = location.pathname.match(/\/(.\..\..)/)[1]
     match = name.match(/([A-Za-z:]+)([\.\#])(.*)/)
     if match
       [_, klass_name, type_name, method_name] = match
       switch type_name
         when "#"
-          "/" + lang + "/" + encodeURIComponent(klass_name) + "/" + encodeURIComponent(method_name)
+          "/#{lang}/#{ver}/#{encodeURIComponent(klass_name)}/#{encodeURIComponent(method_name)}"
         when "."
-          "/" + lang + "/" + encodeURIComponent(klass_name) + "/" + "." + encodeURIComponent(method_name)
+          "/#{lang}/#{ver}/#{encodeURIComponent(klass_name)}/.#{encodeURIComponent(method_name)}"
      else
-       "/" + lang + "/" + encodeURIComponent(name)
+       "/#{lang}/#{ver}/#{encodeURIComponent(name)}"
 
   make_li = (name, is_even) ->
     klass = if is_even then "even" else "odd"

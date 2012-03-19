@@ -18,7 +18,9 @@ RubyApi::Application.routes.draw do
   get ":lang/:version/:module/:name"   => "view#show_instance_method", :lang => lang, :version => ver, :library => "_builtin"
   get ":lang/:version/:module"         => "view#show_module"         , :lang => lang, :version => ver, :library => "_builtin"
 
-  get ":lang" => "view#show_language_top", :lang => lang
+  get ":lang/:version" => "view#show_language_top", :lang => lang, :version => ver
+
+  get ":lang" => redirect("/%{lang}/1.9.3"), :lang => lang
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

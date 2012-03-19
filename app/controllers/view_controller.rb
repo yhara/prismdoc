@@ -66,7 +66,7 @@ class ViewController < ApplicationController
   end
 
   def set_version
-    @version = Version[params[:version]]
+    @version = Version[params[:version]] || Version.latest
   end
 
   def prepare_menu

@@ -5,8 +5,7 @@ class Version < ActiveRecord::Base
 
   default_scope :order => "name DESC"
 
-  def self.current
-    # TODO: add column :current
+  def self.latest
     Version.first
   end
 

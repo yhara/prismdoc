@@ -73,7 +73,7 @@ class ViewController < ApplicationController
     #@modules = [[],[]]; @libraries = []; return
     unless pjax?
       @modules = Entry.builtin_modules
-      @libraries = Entry.libraries
+      @libraries = [] #Entry.libraries
     end
   end
 

@@ -23,6 +23,7 @@
 
         h2= t("view.standard_library")
         #standard_libraries
+          p (not ready)
           - render_tree(@libraries) do |lm|
             = render partial: "entry", object: lm
         

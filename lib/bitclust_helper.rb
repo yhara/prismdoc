@@ -16,7 +16,7 @@ begin
   end
 rescue LoadError
   # on heroku
-  puts "WARNING: bitclust not installed"
+  #puts "WARNING: bitclust not installed"
 end
 
 module RubyApi

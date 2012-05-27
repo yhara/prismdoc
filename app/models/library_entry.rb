@@ -15,4 +15,16 @@ class LibraryEntry < Entry
   def belong_name
     self.name
   end
+
+  def fullname_of(entry_or_name)
+    name = case entry_or_name
+           when Entry 
+             raise ArgumentError if entry_or_name.library_id != self.id
+             entry_or_name.belong_name
+           when String then entry_or_name
+           else raise TypeError
+           end
+
+    "#{self.name};#{name}"
+  end
 end

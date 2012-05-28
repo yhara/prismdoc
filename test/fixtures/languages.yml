@@ -1,0 +1,14 @@
+en:
+  english_name: English
+  native_name: English
+  short_name: en
+
+ja:
+  english_name: Japanese
+  native_name: 日本語
+  short_name: ja
+
+tt:
+  english_name: TranslationTest
+  native_name: TestDataForTranslation
+  short_name: tt

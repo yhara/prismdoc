@@ -1,0 +1,11 @@
+builtin:
+  type: LibraryEntry
+  name: _builtin
+  fullname: _builtin
+
+object:
+  type: ClassEntry
+  name: Object
+  fullname: _builtin;Object
+  library: builtin
+

@@ -1,0 +1,9 @@
+object_ja:
+  entry: object
+  language: ja
+  body: "Objectクラスは、・・・"
+  version: v193
+
+object_en:
+  entry: object
+  language: en

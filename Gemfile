@@ -38,3 +38,8 @@ group :development do
   gem "rails-erd"
 end
 
+group :test do
+  gem 'test-unit', '>= 2'
+  gem 'shoulda-context'
+  gem 'tapp'
+end

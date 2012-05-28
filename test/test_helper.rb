@@ -1,13 +1,22 @@
-ENV["RAILS_ENV"] = "test"
-require File.expand_path('../../config/environment', __FILE__)
-require 'rails/test_help'
+require 'rubygems'
+require 'spork'
+#uncomment the following line to use spork with the debugger
+#require 'spork/ext/ruby-debug'
 
-class ActiveSupport::TestCase
-  # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
-  #
-  # Note: You'll currently still have to declare fixtures explicitly in integration tests
-  # -- they do not yet inherit this setting
-  fixtures :all
+Spork.prefork do
+  ENV["RAILS_ENV"] = "test"
+  require File.expand_path('../../config/environment', __FILE__)
+  require 'rails/test_help'
 
-  # Add more helper methods to be used by all tests here...
+  class ActiveSupport::TestCase
+    # Note: You'll currently still have to declare fixtures explicitly in integration tests
+    fixtures :all
+  end
 end
+
+Spork.each_run do
+end
+
+# --- Spork Instructions ---
+# Any code that is left outside the two blocks will be run during preforking
+# *and* during each_run -- that's probably not what you want.

@@ -42,4 +42,5 @@ group :test do
   gem 'test-unit', '>= 2'
   gem 'shoulda-context'
   gem 'tapp'
+  gem 'spork-testunit'
 end

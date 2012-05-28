@@ -130,6 +130,9 @@ GEM
     slim-rails (0.2.1)
       slim (>= 0.9.2)
     slop (2.4.4)
+    spork (0.9.2)
+    spork-testunit (0.0.8)
+      spork (>= 0.6.0)
     sprockets (2.1.2)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -170,6 +173,7 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   shoulda-context
   slim-rails
+  spork-testunit
   tapp
   test-unit (>= 2)
   therubyracer-heroku (= 0.8.1.pre3)

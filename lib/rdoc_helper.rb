@@ -32,6 +32,18 @@ module RubyApi
       end
     end
 
+    def singleton_methods(mod_name)
+      store.class_methods[mod_name]
+    end
+
+    def instance_methods(mod_name)
+      store.instance_methods[mod_name]
+    end
+
+    def constants(mod_name)
+      store.load_class(mod_name).constants.map(&:name)
+    end
+
     private
 
     def store

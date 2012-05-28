@@ -30,5 +30,17 @@ module RubyApi
       assert_equal "Numeric", @rdoc.superclass("Integer")
       assert_equal nil, @rdoc.superclass("BasicObject")
     end
+
+    should "find class methods in a module" do
+      assert @rdoc.singleton_methods("Math").include?("sqrt")
+    end
+
+    should "find instance methods in a module" do
+      assert @rdoc.instance_methods("Array").include?("each")
+    end
+
+    should "find constants in a module" do
+      assert @rdoc.constants("Math").include?("PI")
+    end
   end
 end

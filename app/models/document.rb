@@ -1,6 +1,7 @@
 class Document < ActiveRecord::Base
   belongs_to :entry
   belongs_to :language
+  belongs_to :version
 
   validates :entry_id, presence: true, uniqueness: {
     scope: [:language_id, :version_id],

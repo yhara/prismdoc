@@ -21,8 +21,10 @@ class LibraryEntry < Entry
            when Entry 
              raise ArgumentError if entry_or_name.library_id != self.id
              entry_or_name.belong_name
-           when String then entry_or_name
-           else raise TypeError
+           when String 
+             entry_or_name
+           else
+             raise TypeError, "unknown class for fullname_of: #{entry_or_name.inspect}(#{entry_or_name.class})"
            end
 
     "#{self.name};#{name}"

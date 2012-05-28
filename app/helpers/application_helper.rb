@@ -15,7 +15,7 @@ module ApplicationHelper
   end
 
   def current_version
-    current = @version || Version.current
+    current = @version || Version.latest
     current.name
   end
 end

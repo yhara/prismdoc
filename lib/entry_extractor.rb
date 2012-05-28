@@ -1,9 +1,85 @@
 require 'tsort'
 require 'bitclust_helper'
+require 'rdoc_helper'
 require 'extractor_helper'
 
 module RubyApi
-  class EntryExtractor
+  class RDocEntryExtractor
+    include ExtractorHelper
+
+    def initialize(ver)
+      @rdoc = RDocHelper.new(ver)
+      @missing_superclass = []
+    end
+
+    def run
+      Entry.transaction do
+        lib_entry = make_library_entries
+        make_builtin_entries(lib_entry)
+      end
+    end
+
+    private
+
+    def make_library_entries
+      clogger.info("Creating entry _builtin")
+      LibraryEntry.create(fullname: "_builtin", name: "_builtin")
+    end
+
+    def make_builtin_entries(lib_entry)
+      @rdoc.modules.each do |mod_name|
+        # TODO: ENV ARGF
+        next if %w(ENV ARGF).include?(mod_name)
+
+        make_module_entry(lib_entry, mod_name)
+        make_entries_in_module(mod_name)
+      end
+
+      clogger.info "Updating postponed .superclass"
+      @missing_superclass.each do |mod_name, super_name|
+        clogger.debug "- #{mod_name} < #{super_name}"
+        superentry = Entry[lib_entry.fullname_of(super_name)]
+        Entry[lib_entry.fullname_of(mod_name)].update_attributes!(superclass: superentry)
+      end
+    end
+
+    def make_module_entry(lib_entry, mod_name)
+      raise ArgumentError unless @rdoc.module?(mod_name)
+      fullname = lib_entry.fullname_of(mod_name)
+      clogger.info("Creating entry #{fullname}")
+
+      if @rdoc.class?(mod_name)
+        # Class
+        super_name = @rdoc.superclass(mod_name)
+        if super_name.nil?
+          # BasicObject
+          superclass = nil
+        else
+          superclass = Entry.find_by_fullname(lib_entry.fullname_of(super_name))
+          if superclass.nil?
+            @missing_superclass.push [mod_name, super_name]
+          end
+        end
+        ClassEntry.create(fullname: lib_entry.fullname_of(mod_name),
+                          name: mod_name,
+                          superclass: superclass,
+                          library: lib_entry)
+      else
+        # Module
+        ModuleEntry.create(fullname: lib_entry.fullname_of(mod_name),
+                           name: mod_name,
+                           library: lib_entry)
+      end
+    end
+
+    def make_entries_in_module(mod_name)
+
+    end
+  end
+
+  EntryExtractor = RDocEntryExtractor
+
+  class BitClustEntryExtractor
     include BitClustHelper
     include ExtractorHelper
 

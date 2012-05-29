@@ -3,7 +3,7 @@ require 'rdoc_helper.rb'
 
 module RubyApi
   class RDocHelperTest < ActiveSupport::TestCase
-    def setup
+    setup do
       @rdoc = RDocHelper.new("1.9.3")
     end
 

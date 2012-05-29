@@ -2,8 +2,8 @@ RubyApi
 =======
 
 
-Design note
-===========
+Notes
+=====
 
 Model
 -----
@@ -33,3 +33,54 @@ Model
 * string :english_name
 * string :native_name
 
+xxxx
+====
+
+xxxx is a ...
+
+Features
+--------
+
+* 
+
+Demo
+====
+
+[http://blazing-ice-2849.herokuapp.com/en/]http://blazing-ice-2849.herokuapp.com/en/ English documentation
+
+[http://blazing-ice-2849.herokuapp.com/ja/]http://blazing-ice-2849.herokuapp.com/ja/ Japanese documentation
+
+[http://blazing-ice-2849.herokuapp.com/eo/]http://blazing-ice-2849.herokuapp.com/eo/ Esperant documentation (demo for translation)
+
+Development
+===========
+
+1. git clone
+
+2. bundle
+
+2. cp config/database.yml.sample config/database.yml
+
+3. rake db:migrate
+
+3. rake docsource:rdoc:download
+
+4. rake docsource:rdoc:core
+
+5. rake import:entries VER=1.9.3
+
+5. rake import:documents VER=1.9.3 LANG=en
+
+License
+=======
+
+MIT
+
+Contact
+=======
+
+https://github.com/yhara/prismdoc
+
+Yutaka HARA (yhara)
+
+twitter: @yhara_en

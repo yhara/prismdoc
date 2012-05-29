@@ -33,6 +33,7 @@ module RubyApi
 
     should "find class methods in a module" do
       assert @rdoc.singleton_methods("Math").include?("sqrt")
+      assert_equal [], @rdoc.singleton_methods("ArgumentError")
     end
 
     should "find instance methods in a module" do
@@ -41,6 +42,7 @@ module RubyApi
 
     should "find constants in a module" do
       assert @rdoc.constants("Math").include?("PI")
+      assert_equal [], @rdoc.constants("Array")
     end
   end
 end

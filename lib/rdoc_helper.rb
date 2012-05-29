@@ -33,11 +33,11 @@ module RubyApi
     end
 
     def singleton_methods(mod_name)
-      store.class_methods[mod_name]
+      store.class_methods[mod_name] or []
     end
 
     def instance_methods(mod_name)
-      store.instance_methods[mod_name]
+      store.instance_methods[mod_name] or []
     end
 
     def constants(mod_name)

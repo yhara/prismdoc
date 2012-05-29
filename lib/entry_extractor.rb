@@ -31,8 +31,8 @@ module RubyApi
         # TODO: ENV ARGF
         next if %w(ENV ARGF).include?(mod_name)
 
-        make_module_entry(lib_entry, mod_name)
-        make_entries_in_module(mod_name)
+        mod_entry = make_module_entry(lib_entry, mod_name)
+        make_entries_in_module(lib_entry, mod_entry)
       end
 
       clogger.info "Updating postponed .superclass"
@@ -43,6 +43,7 @@ module RubyApi
       end
     end
 
+    # Returns a ModuleEntry
     def make_module_entry(lib_entry, mod_name)
       raise ArgumentError unless @rdoc.module?(mod_name)
       fullname = lib_entry.fullname_of(mod_name)
@@ -72,8 +73,26 @@ module RubyApi
       end
     end
 
-    def make_entries_in_module(mod_name)
-
+    def make_entries_in_module(lib_entry, mod_entry)
+      attrs = {
+        module_id: mod_entry.id,
+        library_id: lib_entry.id,
+      }
+      @rdoc.singleton_methods(mod_entry.name).each do |name|
+        fullname = "#{mod_entry.fullname}.#{name}"
+        clogger.debug("Creating entry #{fullname}")
+        SingletonMethodEntry.create(attrs.merge({name: name, fullname: fullname}))
+      end
+      @rdoc.instance_methods(mod_entry.name).each do |name|
+        fullname = "#{mod_entry.fullname}##{name}"
+        clogger.debug("Creating entry #{fullname}")
+        InstanceMethodEntry.create(attrs.merge({name: name, fullname: fullname}))
+      end
+      @rdoc.constants(mod_entry.name).each do |name|
+        fullname = "#{mod_entry.fullname}::#{name}"
+        clogger.debug("Creating entry #{fullname}")
+        ConstantEntry.create(attrs.merge({name: name, fullname: fullname}))
+      end
     end
   end
 

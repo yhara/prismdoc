@@ -7,8 +7,9 @@ module RubyApi
   class RDocEntryExtractor
     include ExtractorHelper
 
-    def initialize(ver)
-      @rdoc = RDocHelper.new(ver)
+    def initialize(ver_str)
+      @version = Version.find_or_create_by_name(name: ver_str)
+      @rdoc = RDocHelper.new(@version)
       @missing_superclass = []
     end
 
@@ -23,7 +24,7 @@ module RubyApi
 
     def make_library_entries
       clogger.info("Creating entry _builtin")
-      LibraryEntry.create(fullname: "_builtin", name: "_builtin")
+      LibraryEntry.create!(fullname: "_builtin", name: "_builtin", version: @version)
     end
 
     def make_builtin_entries(lib_entry)
@@ -61,15 +62,17 @@ module RubyApi
             @missing_superclass.push [mod_name, super_name]
           end
         end
-        ClassEntry.create(fullname: lib_entry.fullname_of(mod_name),
-                          name: mod_name,
-                          superclass: superclass,
-                          library: lib_entry)
+        ClassEntry.create!(fullname: lib_entry.fullname_of(mod_name),
+                           name: mod_name,
+                           superclass: superclass,
+                           library: lib_entry,
+                           version: @version)
       else
         # Module
-        ModuleEntry.create(fullname: lib_entry.fullname_of(mod_name),
-                           name: mod_name,
-                           library: lib_entry)
+        ModuleEntry.create!(fullname: lib_entry.fullname_of(mod_name),
+                            name: mod_name,
+                            library: lib_entry,
+                            version: @version)
       end
     end
 
@@ -77,6 +80,7 @@ module RubyApi
       attrs = {
         module_id: mod_entry.id,
         library_id: lib_entry.id,
+        version: @version,
       }
       @rdoc.singleton_methods(mod_entry.name).each do |name|
         fullname = "#{mod_entry.fullname}.#{name}"
@@ -125,7 +129,7 @@ module RubyApi
         name = normalize_library_name(lib.name)
         clogger.debug "creating entry for library #{name}"
         lib_entry = Entry.where(name: name).first
-        lib_entry ||= LibraryEntry.create(fullname: name, name: name)
+        lib_entry ||= LibraryEntry.create!(fullname: name, name: name, version: @version)
         make_module_entries(lib, lib_entry)
       end
 
@@ -154,9 +158,10 @@ module RubyApi
           clogger.debug "creating entry for #{m.type} #{fullname_of(m)}"
 
           if m.type == :module
-            ModuleEntry.create(fullname: fullname_of(m),
+            ModuleEntry.create!(fullname: fullname_of(m),
                                 name: m.name,
-                                library: lib_entry)
+                                library: lib_entry,
+                                version: @version)
           else
             if s = m.superclass 
               superclass = Entry.find_by_fullname(fullname_of(s))
@@ -165,10 +170,11 @@ module RubyApi
               superclass = nil
             end
 
-            ClassEntry.create(fullname: fullname_of(m),
+            ClassEntry.create!(fullname: fullname_of(m),
                                name: m.name,
                                superclass: superclass,
-                               library: lib_entry)
+                               library: lib_entry,
+                               version: @version)
           end
         else
           clogger.warn "skipping #{m.type} #{m.name}"
@@ -198,21 +204,22 @@ module RubyApi
           name: meth.name,
           module_id: mod_entry.id,
           library_id: lib_entry.id,
+          version: @version,
         }
         case meth.typename
         when :singleton_method, :module_function
           attrs[:fullname] = "#{mod_entry.fullname}.#{meth.name}"
           clogger.debug "creating entry for #{attrs[:fullname]}"
-          SingletonMethodEntry.create(attrs)
+          SingletonMethodEntry.create!(attrs)
         when :instance_method
           attrs[:fullname] = "#{mod_entry.fullname}##{meth.name}"
           clogger.debug "creating entry for #{attrs[:fullname]}"
           clogger.debug attrs.inspect
-          InstanceMethodEntry.create(attrs)
+          InstanceMethodEntry.create!(attrs)
         when :constant
           attrs[:fullname] = "#{mod_entry.fullname}::#{meth.name}"
           clogger.debug "creating entry for #{attrs[:fullname]}"
-          ConstantEntry.create(attrs)
+          ConstantEntry.create!(attrs)
         when :special_variable
           # skip
         else

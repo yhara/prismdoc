@@ -3,8 +3,8 @@ Driver = RDoc::RI::Driver
 
 module RubyApi
   class RDocHelper
-    def initialize(ver_name)
-      @ver_name = ver_name
+    def initialize(ver)
+      @ver= ver
     end
 
     def modules
@@ -51,7 +51,7 @@ module RubyApi
     end
 
     def rdoc_data_path
-      DocumentSource.rdoc_data_path(@ver_name)
+      DocumentSource.rdoc_data_path(@ver.name)
     end
 
     def rdoc_driver

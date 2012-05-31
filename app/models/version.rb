@@ -1,4 +1,5 @@
 class Version < ActiveRecord::Base
+  has_many :entries
   has_many :documents
 
   validates :name,   presence: true, uniqueness: true

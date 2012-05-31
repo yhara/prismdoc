@@ -1,8 +1,10 @@
 class Entry < ActiveRecord::Base
   has_many :documents
+  belongs_to :version
 
   validates :name,     presence: true
   validates :fullname, presence: true, uniqueness: true
+  validates :version,  presence: true
 
   # Shortcut to an instance of Entry.
   # Useful in rails console (eg. Entry["Array#map!"])

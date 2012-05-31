@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120318142620) do
+ActiveRecord::Schema.define(:version => 20120531141848) do
 
   create_table "documents", :force => true do |t|
     t.integer "entry_id"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20120318142620) do
     t.integer "superclass_id"
     t.integer "module_id"
     t.integer "library_id"
+    t.integer "version_id"
   end
 
   create_table "languages", :force => true do |t|

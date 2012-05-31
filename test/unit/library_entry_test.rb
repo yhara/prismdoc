@@ -2,6 +2,8 @@ require 'test_helper'
 
 module RubyApi
   class LibraryEntryTest < ActiveSupport::TestCase
+    fixtures :all
+
     setup do
       @builtin = Entry["_builtin"]
     end

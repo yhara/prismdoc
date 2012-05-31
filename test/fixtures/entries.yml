@@ -1,11 +1,27 @@
-builtin:
-  type: LibraryEntry
-  name: _builtin
-  fullname: _builtin
+builtin18:
+  type: "LibraryEntry"
+  name: "_builtin"
+  fullname: "_builtin"
+  version: v187
 
-object:
-  type: ClassEntry
-  name: Object
-  fullname: _builtin;Object
-  library: builtin
+object18:
+  type: "ClassEntry"
+  name: "Object"
+  fullname: "_builtin;Object"
+  library: builtin18
+  version: v187
+
+
+builtin19:
+  type: "LibraryEntry"
+  name: "_builtin"
+  fullname: "_builtin"
+  version: v193
+
+object19:
+  type: "ClassEntry"
+  name: "Object"
+  fullname: "_builtin;Object"
+  library: builtin19
+  version: v193
 

@@ -37,9 +37,8 @@ namespace :import do
         begin
           puts "creating document for #{entry.type} #{entry.fullname}"
           body = extractor.extract_document(entry).body
-          Document.create!(entry_id: entry.id,
-                           language_id: language_id,
-                           version_id: version_id,
+          Document.create!(entry: entry,
+                           language: language,
                            body: body)
         rescue Exception => ex
           puts "#{ex.class} occured (entry: #{entry.inspect})"

@@ -1,5 +1,6 @@
 class Language < ActiveRecord::Base
-  has_many :documents
+  has_many :documents, dependent: :delete_all
+  has_many :paragraphs, dependent: :delete_all
 
   validates :short_name,   presence: true, uniqueness: true
   validates :english_name, presence: true, uniqueness: true

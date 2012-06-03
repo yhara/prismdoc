@@ -3,7 +3,9 @@
   div No doc available!
 
 - when document.body
-  pre== document.body
+  // English
+  pre== RubyApi::RDocHelper.html(document.body)
 
 - else
+  // Translation form
   = render partial: "paragraph", collection: document.paragraphs

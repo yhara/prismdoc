@@ -3,6 +3,10 @@ Driver = RDoc::RI::Driver
 
 module RubyApi
   class RDocHelper
+    def self.html(rdoc_txt)
+      RDoc::Markup::ToHtml.new.convert(rdoc_txt)
+    end
+
     def initialize(ver)
       @ver = ver
     end
@@ -65,12 +69,6 @@ module RubyApi
       rescue_enoent do
         to_rdoc store.load_method(mod_name, "#"+meth_name).comment
       end
-    end
-
-    # HTML
-
-    def html(rdoc_txt)
-      RDoc::Markup::ToHtml.new.convert(rdoc_txt)
     end
 
     private

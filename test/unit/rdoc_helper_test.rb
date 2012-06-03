@@ -62,7 +62,7 @@ module RubyApi
     end
 
     should "convert rdoc to html" do
-      assert_match /<pre>/, @rdoc.html("example:\n  p 1")
+      assert_match /<pre>/, RDocHelper.html("example:\n  p 1")
     end
   end
 end

@@ -60,5 +60,9 @@ module RubyApi
     should "extract constant document" do
       assert_nil @rdoc.constant_doc("Math", "PI")
     end
+
+    should "convert rdoc to html" do
+      assert_match /<pre>/, @rdoc.html("example:\n  p 1")
+    end
   end
 end

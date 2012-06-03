@@ -4,7 +4,7 @@ Driver = RDoc::RI::Driver
 module RubyApi
   class RDocHelper
     def initialize(ver)
-      @ver= ver
+      @ver = ver
     end
 
     # Entry
@@ -65,6 +65,12 @@ module RubyApi
       rescue_enoent do
         to_rdoc store.load_method(mod_name, "#"+meth_name).comment
       end
+    end
+
+    # HTML
+
+    def html(rdoc_txt)
+      RDoc::Markup::ToHtml.new.convert(rdoc_txt)
     end
 
     private

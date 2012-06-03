@@ -58,7 +58,7 @@ class MainController < ApplicationController
   end
 
   def set_layout
-   if pjax? then false else "view" end
+   if pjax? then false else "main" end
   end
 
   def set_language

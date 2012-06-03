@@ -1,14 +1,12 @@
 class Document < ActiveRecord::Base
   belongs_to :entry
   belongs_to :language
-  belongs_to :version
 
   validates :entry_id, presence: true, uniqueness: {
-    scope: [:language_id, :version_id],
+    scope: [:language_id],
     message: "already has a Document for the language and version for entry %{value}"
   }
   validates :language_id, presence: true
-  validates :version_id, presence: true
   validates :translated, format: {
     with: /\A(yes|partially|no)\z/,
     message: "unknown state of translation: %{value}"
@@ -18,7 +16,6 @@ class Document < ActiveRecord::Base
 
   def original
     Document.where(language_id: Language["en"].id,
-                   version_id: self.version_id,
                    entry_id: self.entry_id).first
   end
 

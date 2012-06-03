@@ -11,13 +11,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120531141848) do
+ActiveRecord::Schema.define(:version => 20120603143256) do
 
   create_table "documents", :force => true do |t|
     t.integer "entry_id"
     t.integer "language_id"
     t.text    "body"
-    t.integer "version_id"
     t.text    "paragraph_id_list"
     t.string  "translated",        :default => "no", :null => false
   end

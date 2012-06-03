@@ -8,7 +8,6 @@ module RubyApi
         doc = Document.new(entry: entries("builtin19"),
                            language: languages("ja"),
                            body: "",
-                           version: versions("v193"),
                            translated: "xxxx")
         assert_equal false, doc.valid?
         assert_match /unknown state/, doc.errors[:translated].first
@@ -17,8 +16,7 @@ module RubyApi
       should "check it is not translated yet" do
         doc = Document.new(entry: entries("object19"),
                            language: languages("ja"),
-                           body: "",
-                           version: versions("v193"))
+                           body: "")
         assert_equal false, doc.valid?
         assert_match /already/, doc.errors[:entry_id].first
       end
@@ -28,7 +26,6 @@ module RubyApi
 #          doc = Document.create(entry: entries("object19"),
 #                                language: languages("ja"),
 #                                body: "",
-#                                version: versions("v193"))
 #          assert_equal "no", doc.translated
 #        end
 #      end

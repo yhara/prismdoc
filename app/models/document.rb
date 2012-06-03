@@ -14,7 +14,7 @@ class Document < ActiveRecord::Base
     message: "unknown state of translation: %{value}"
   }
 
-  before_create :set_translated
+  before_create :create_paragraphs, :set_translated
 
   def original
     Document.where(language_id: Language["en"].id,
@@ -49,6 +49,30 @@ class Document < ActiveRecord::Base
 
   def set_translated
     self.translated = translation_state
+  end
+
+  def create_paragraphs
+    para_ids = split_body(self.body || "").map{|str|
+      # Note: remove trailing spaces because two paragraphs
+      # "abc" and "abc\n" should be regarded as the same
+      str.rstrip!
+
+      if para = Paragraph.where(body: str, language_id: self.language.id).first
+        para.id
+      else
+        Paragraph.new.tap{|para|
+          para.body = str
+          para.language = self.language
+          para.original = nil
+          para.save!
+        }.id
+      end
+    }
+    self.paragraph_id_list = " " + para_ids.join(" ") + " "
+  end
+
+  def split_body(body)
+    body.split(/^\s*\n/)
   end
 end
 

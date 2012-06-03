@@ -29,6 +29,24 @@ module RubyApi
 #          assert_equal "no", doc.translated
 #        end
 #      end
+      
+      should "create paragraphs for English document" do
+        doc = Document.create(entry: entries("builtin19"),
+                              language: languages("en"),
+                              body: "aa\nbb\n\n\ncc\n\ncc\n")
+        paras = doc.paragraphs
+        assert_equal [nil, nil, nil], paras.map(&:original)
+        assert_equal ["aa\nbb", "cc", "cc"], paras.map(&:body)
+        assert paras[1].id == paras[2].id
+      end
+      
+#      should "create paragraphs for translated document" do
+#        doc = Document.create(entry: entries("builtin19"),
+#                              language: languages("tt"))
+#        paras = doc.paragraphs
+#        assert_equal [nil, nil], paras.map(&:original)
+#        assert_equal ["aa\nbb\n", "cc"], paras.map(&:body)
+#      end
     end
   end
 end

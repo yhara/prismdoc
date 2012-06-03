@@ -1,10 +1,5 @@
 source 'https://rubygems.org'
 
-#yard_path = File.expand_path("../yard", File.dirname(__FILE__))
-#gem 'yard', git: "file://#{yard_path}", branch: "i18n"
-gem 'yard', git: 'git://github.com/yhara/yard.git', branch: "i18n"
-gem 'fast_gettext'
-
 gem 'rails', '3.2.1'
 
 gem 'i18n_generators'

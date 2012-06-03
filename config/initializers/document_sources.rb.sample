@@ -19,11 +19,6 @@ module RubyApi
         File.join(Rails.root, "docsource/bitclust/#{ver}/")
       end
 
-      # not used now
-      def yard_cache(ver)
-        "/Users/yhara/r/#{ruby(ver)}/.yardoc_core/"
-      end
-
       private
       def ruby(ver)
         raise ArgumentError, "unknown version: #{ver}" unless PATCHLEVEL[ver]

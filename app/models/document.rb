@@ -49,26 +49,53 @@ class Document < ActiveRecord::Base
 
   def set_translated
     self.translated = translation_state
+    return true
   end
 
   def create_paragraphs
-    para_ids = split_body(self.body || "").map{|str|
-      # Note: remove trailing spaces because two paragraphs
-      # "abc" and "abc\n" should be regarded as the same
-      str.rstrip!
+    case self.language.short_name
+    when "en"
+      return nil if self.body.nil?
 
-      if para = Paragraph.where(body: str, language_id: self.language.id).first
-        para.id
-      else
-        Paragraph.new.tap{|para|
-          para.body = str
-          para.language = self.language
-          para.original = nil
-          para.save!
-        }.id
-      end
-    }
-    self.paragraph_id_list = " " + para_ids.join(" ") + " "
+      para_ids = split_body(self.body || "").map{|str|
+        # Note: remove trailing spaces because two paragraphs
+        # "abc" and "abc\n" should be regarded as the same
+        str.rstrip!
+
+        if para = Paragraph.where(body: str, language_id: self.language.id).first
+          para.id
+        else
+          Paragraph.new.tap{|para|
+            para.body = str
+            para.language = self.language
+            para.original = nil
+            para.save!
+          }.id
+        end
+      }
+      self.paragraph_id_list = " " + para_ids.join(" ") + " "
+    when "ja"
+      # do not make paragraphs
+    else
+      orig_document = self.original
+      return nil if orig_document.body.nil?
+
+      para_ids = orig_document.paragraphs.map{|orig_paragraph|
+        if para = Paragraph.where(language_id: self.language.id,
+                                  original_id: orig_paragraph.id).first
+          para.id
+        else
+          Paragraph.new.tap{|para|
+            para.body = nil
+            para.language = self.language
+            para.original = orig_paragraph
+            para.save!
+          }.id
+        end
+      }
+      self.paragraph_id_list = " " + para_ids.join(" ") + " "
+    end
+    return true
   end
 
   def split_body(body)

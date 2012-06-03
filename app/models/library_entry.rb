@@ -19,7 +19,9 @@ class LibraryEntry < Entry
   def fullname_of(entry_or_name)
     name = case entry_or_name
            when Entry 
-             raise ArgumentError if entry_or_name.library_id != self.id
+             if entry_or_name.library_id != self.id
+               raise ArgumentError, "not in me #{self.name} (#{entry_or_name}.inspect)"
+             end
              entry_or_name.belong_name
            when String 
              entry_or_name

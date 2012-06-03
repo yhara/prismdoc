@@ -10,7 +10,7 @@ class MainController < ApplicationController
     find_entry(params[:library]) do |entry|
       @entry = entry
       @document = find_document(@entry)
-      #@methods = Entry.where("fullname LIKE ?", @entry.fullname + "%")
+      #@methods = Entry.where(version_id: @version.id, "fullname LIKE ?", @entry.fullname + "%")
     end
   end
 
@@ -72,13 +72,13 @@ class MainController < ApplicationController
   def prepare_menu
     #@modules = [[],[]]; @libraries = []; return
     unless pjax?
-      @modules = Entry.builtin_modules
-      @libraries = [] #Entry.libraries
+      @modules = Entry.builtin_modules(@version)
+      @libraries = [] #Entry.libraries(@version)
     end
   end
 
   def find_entry(fullname)
-    if entry = Entry.find_by_fullname(fullname)
+    if entry = Entry.where(fullname: fullname, version_id: @version.id).first
       yield entry
     else
       not_found
@@ -91,7 +91,6 @@ class MainController < ApplicationController
     #return RubyApi::DocumentExtractor.for(@language, @version).extract_document(entry)
 
     Document.where(entry_id: entry.id,
-                   language_id: @language.id,
-                   version_id: @version.id).first
+                   language_id: @language.id).first
   end
 end

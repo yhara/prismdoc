@@ -39,8 +39,8 @@ module RubyApi
       clogger.info "Updating postponed .superclass"
       @missing_superclass.each do |mod_name, super_name|
         clogger.debug "- #{mod_name} < #{super_name}"
-        superentry = Entry[lib_entry.fullname_of(super_name)]
-        Entry[lib_entry.fullname_of(mod_name)].update_attributes!(superclass: superentry)
+        superentry = Entry[lib_entry.fullname_of(super_name), @version]
+        Entry[lib_entry.fullname_of(mod_name), @version].update_attributes!(superclass: superentry)
       end
     end
 
@@ -57,7 +57,7 @@ module RubyApi
           # BasicObject
           superclass = nil
         else
-          superclass = Entry.find_by_fullname(lib_entry.fullname_of(super_name))
+          superclass = Entry.where(version_id: @version.id, fullname: lib_entry.fullname_of(super_name))
           if superclass.nil?
             @missing_superclass.push [mod_name, super_name]
           end

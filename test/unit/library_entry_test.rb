@@ -5,7 +5,7 @@ module RubyApi
     fixtures :all
 
     setup do
-      @builtin = Entry["_builtin"]
+      @builtin = Entry["_builtin", "1.9.3"]
     end
 
     should "return fullname of inner modules" do

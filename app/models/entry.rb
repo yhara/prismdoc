@@ -7,14 +7,15 @@ class Entry < ActiveRecord::Base
   validates :version,  presence: true
 
   # Shortcut to an instance of Entry.
-  # Useful in rails console (eg. Entry["Array#map!"])
-  def self.[](fullname)
-    Entry.find_by_fullname!(fullname)
+  # Useful in rails console (eg. Entry["Array#map!", "1.9.3"])
+  def self.[](fullname, version)
+    version = Version[version] if version.is_a?(String)
+    Entry.find_by_fullname_and_version_id!(fullname, version.id)
   end
 
-  def self.builtin_modules
-    mods = ModuleEntry.where(library_id: Entry["_builtin"].id).
-                       order(:name).to_a
+  def self.builtin_modules(version)
+    mods = ModuleEntry.where(version_id: version.id,
+                             library_id: Entry["_builtin", version].id).order(:name).to_a
     exception = mods.find{|m| m.name == "Exception"} or raise "Exception not found"
     mods.delete(exception)
 
@@ -31,13 +32,13 @@ class Entry < ActiveRecord::Base
     [mods, tree]
   end
 
-  def self.libraries
-    LibraryEntry.includes(:modules).order(:fullname).select{|l|
+  def self.libraries(version)
+    LibraryEntry.where(version_id: version.id).includes(:modules).order(:fullname).select{|l|
       not l.name.include?("/") and
       not l.name == "_builtin"
     }.inject({}) do |h, l|
       h[l] = l.modules.sort_by(&:name).inject({}){|h2, m| h2[m] = {}; h2}.merge(
-        LibraryEntry.where("name LIKE '#{l.name}/%'").sort_by(&:name).inject({}){|h2, m| h2[m] = {}; h2}
+        LibraryEntry.where(version_id: version.id).where("name LIKE '#{l.name}/%'").sort_by(&:name).inject({}){|h2, m| h2[m] = {}; h2}
       )
       h
     end

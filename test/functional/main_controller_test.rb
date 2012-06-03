@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class ViewControllerTest < ActionController::TestCase
+class MainControllerTest < ActionController::TestCase
   test "should get show" do
-    get :show
+    get :show_module, lang: "en", version: "1.9.3", library: "_builtin", module: "Object"
     assert_response :success
   end
 

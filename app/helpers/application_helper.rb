@@ -1,6 +1,6 @@
 module ApplicationHelper
   def language_options
-    pairs = Language.all.map{|l| [l.english_name, l.short_name]}
+    pairs = Language.order(:native_name).map{|l| [l.native_name, l.short_name]}
     Hash[*pairs.flatten]
   end
 

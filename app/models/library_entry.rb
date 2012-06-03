@@ -20,7 +20,7 @@ class LibraryEntry < Entry
     name = case entry_or_name
            when Entry 
              if entry_or_name.library_id != self.id
-               raise ArgumentError, "not in me #{self.name} (#{entry_or_name}.inspect)"
+               raise ArgumentError, "not in me #{self.name} (#{entry_or_name.inspect})"
              end
              entry_or_name.belong_name
            when String 

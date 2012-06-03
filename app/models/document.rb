@@ -2,6 +2,8 @@ class Document < ActiveRecord::Base
   belongs_to :entry
   belongs_to :language
 
+  attr_accessible :entry, :language, :body
+
   validates :entry_id, presence: true, uniqueness: {
     scope: [:language_id],
     message: "already has a Document for the language and version for entry %{value}"

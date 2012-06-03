@@ -7,8 +7,8 @@ module RubyApi
       should "check <translated> has valid value" do
         doc = Document.new(entry: entries("builtin19"),
                            language: languages("ja"),
-                           body: "",
-                           translated: "xxxx")
+                           body: "")
+        doc.translated = "xxxx"
         assert_equal false, doc.valid?
         assert_match /unknown state/, doc.errors[:translated].first
       end

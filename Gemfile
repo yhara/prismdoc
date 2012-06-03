@@ -34,13 +34,16 @@ gem 'jquery-rails'
 
 group :development do
   gem 'pry-rails'
-  gem 'awesome_print'
   gem "rails-erd"
+end
+
+group :development, :test do
+  gem 'awesome_print'
+  gem 'tapp'
 end
 
 group :test do
   gem 'test-unit', '>= 2'
   gem 'shoulda-context'
-  gem 'tapp'
   gem 'spork-testunit'
 end

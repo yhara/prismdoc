@@ -1,4 +1,4 @@
-class ViewController < ApplicationController
+class MainController < ApplicationController
   before_filter :set_language, :set_version, :prepare_menu
   layout :set_layout
 

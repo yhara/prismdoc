@@ -1,4 +1,4 @@
-module ViewHelper
+module MainHelper
   def render_tree(tree, &block)
     return if tree.empty?
 

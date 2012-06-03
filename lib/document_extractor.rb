@@ -1,3 +1,4 @@
+require 'rdoc_helper'
 require 'bitclust_helper'
 require 'extractor_helper'
 
@@ -7,7 +8,7 @@ module RubyApi
 
     def self.for(language, version)
       case language.short_name
-      when "en" then YardExtractor.new(version)
+      when "en" then RDocExtractor.new(version)
       when "ja" then BitClustExtractor.new(version)
       else TranslationExtractor.new(language, version)
       end
@@ -37,6 +38,35 @@ module RubyApi
         body = extract_constant(entry)
       end
       PseudoDocument.new(body)
+    end
+
+    class RDocExtractor < DocumentExtractor
+      def initialize(ver)
+        @rdoc = RDocHelper.new(ver)
+        super
+      end
+
+      #Override
+      def extract_document(entry)
+        case entry
+        when LibraryEntry
+          body = "(not yet)"
+        when ModuleEntry
+          body = @rdoc.module_doc(entry.name)
+        when SingletonMethodEntry
+          body = @rdoc.singleton_method_doc(entry.module.name, entry.name)
+        when InstanceMethodEntry
+          body = @rdoc.instance_method_doc(entry.module.name, entry.name)
+        when ConstantEntry
+          body = @rdoc.constant_doc(entry.module.name, entry.name)
+        end
+        PseudoDocument.new(body)
+      end
+
+      private
+      def registry
+        @registry ||= YARD::Registry.load(DocumentSource.yard_cache(@ver))
+      end
     end
 
     class YardExtractor < DocumentExtractor

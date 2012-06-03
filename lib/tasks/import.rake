@@ -32,17 +32,19 @@ namespace :import do
     version_id = version.id
 
     extractor = RubyApi::DocumentExtractor.for(language, version)
-    Entry.all.each do |entry|
-      begin
-        puts "creating document for #{entry.type} #{entry.fullname}"
-        body = extractor.extract_document(entry).body
-        Document.create!(entry_id: entry.id,
-                         language_id: language_id,
-                         version_id: version_id,
-                         body: body)
-      rescue Exception => ex
-        puts "error occured (entry: #{entry.inspect})"
-        raise ex
+    Document.transaction do
+      Entry.find_each do |entry|
+        begin
+          puts "creating document for #{entry.type} #{entry.fullname}"
+          body = extractor.extract_document(entry).body
+          Document.create!(entry_id: entry.id,
+                           language_id: language_id,
+                           version_id: version_id,
+                           body: body)
+        rescue Exception => ex
+          puts "#{ex.class} occured (entry: #{entry.inspect})"
+          raise ex
+        end
       end
     end
   end

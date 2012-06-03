@@ -7,6 +7,8 @@ module RubyApi
       @ver= ver
     end
 
+    # Entry
+
     def modules
       store.modules
     end
@@ -44,7 +46,38 @@ module RubyApi
       store.load_class(mod_name).constants.map(&:name)
     end
 
+    # Document
+
+    def module_doc(mod_name)
+      rescue_enoent do
+        to_rdoc store.load_class(mod_name).comment
+      end
+    end
+
+    def singleton_method_doc(mod_name, meth_name)
+      rescue_enoent do
+        to_rdoc store.load_method(mod_name, meth_name).comment
+      end
+    end
+    alias constant_doc singleton_method_doc
+
+    def instance_method_doc(mod_name, meth_name)
+      rescue_enoent do
+        to_rdoc store.load_method(mod_name, "#"+meth_name).comment
+      end
+    end
+
     private
+
+    def rescue_enoent(&block)
+      return block.call
+    rescue Errno::ENOENT
+      return nil
+    end
+
+    def to_rdoc(doc)
+      doc.accept(RDoc::Markup::ToRdoc.new)
+    end
 
     def store
       @store ||= rdoc_driver.stores.find{|store| store.path == rdoc_data_path}

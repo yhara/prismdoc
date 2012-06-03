@@ -4,7 +4,7 @@ require 'rdoc_helper.rb'
 module RubyApi
   class RDocHelperTest < ActiveSupport::TestCase
     setup do
-      @rdoc = RDocHelper.new("1.9.3")
+      @rdoc = RDocHelper.new(Version["1.9.3"])
     end
 
     should "get list of modules" do
@@ -43,6 +43,22 @@ module RubyApi
     should "find constants in a module" do
       assert @rdoc.constants("Math").include?("PI")
       assert_equal [], @rdoc.constants("Array")
+    end
+
+    should "extract module document" do
+      assert_match /Array/, @rdoc.module_doc("Array")
+    end
+
+    should "extract singleton method document" do
+      assert_match /Array/, @rdoc.singleton_method_doc("Array", "new")
+    end
+
+    should "extract instance method document" do
+      assert_match /enumerator/, @rdoc.instance_method_doc("Array", "each")
+    end
+
+    should "extract constant document" do
+      assert_nil @rdoc.constant_doc("Math", "PI")
     end
   end
 end

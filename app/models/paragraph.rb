@@ -1,3 +1,5 @@
+require 'rdoc_helper.rb'
+
 class Paragraph < ActiveRecord::Base
   belongs_to :language
   belongs_to :original, class_name: "Paragraph"
@@ -18,6 +20,10 @@ class Paragraph < ActiveRecord::Base
 
   def text
     body or original.body
+  end
+
+  def html
+    RubyApi::RDocHelper.html(self.text)
   end
 
   private

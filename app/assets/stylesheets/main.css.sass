@@ -2,19 +2,23 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@mixin code-pre
+  font-family: "Lucida Console", Monaco, monospace
+  font-size: 95%
+  line-height: 110%
+
 $header_height: 30px
 
 html, body
   height: 100%
   padding: 0
   margin: 0
-  
-#header
+
+#topbar
   width: 100%
   top: 0
   position: fixed
   height: $header_height
-  background: #eee
   border-bottom: 1px solid black
 
   #search
@@ -37,6 +41,7 @@ html, body
 
   #title
     margin-left: 40%
+    margin-top: 5px
     float: left
 
   #selectors
@@ -54,6 +59,7 @@ html, body
     width: 300px
     height: 100%
     border-right: 1px solid #aaa
+    border-top: 1px solid black
     position: fixed
     overflow: auto
     padding-bottom: $header_height
@@ -85,12 +91,43 @@ html, body
     #doc
       margin: 1em
 
+      pre
+        @include code-pre
+
       .paragraph
         .current_text
           .not_translated
-            color: #666
+            color: #888
         .original_text
-          color: #666
+          color: #888
+
+      textarea
+        font-size: 100%
 
 .hidden
   display: none
+
+// aesthetic things
+
+body
+  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif
+
+h1, h2, h3, h4, h5, h6, #title
+  font-family: Georgia, Palatino, "Times New Roman", Times, serif
+
+a 
+  color: #3256B6
+a:visited 
+  color: #7130B8
+a:hover, a:visited:hover 
+  color: #C61A1A
+  text-decoration: none
+
+#topbar
+  background: #ccc
+
+  #title
+    color: black
+
+#left
+  //background: #f8fbea

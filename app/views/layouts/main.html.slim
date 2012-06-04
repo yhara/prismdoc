@@ -1,10 +1,9 @@
 - content_for :body do
-  #header
+  #topbar
     #search
       input#search-box type="text"
     #title
       ' Ruby Standard Library API
-      = "(#{@language.english_name})"
     #selectors
       = select_tag "version", options_for_select(version_options, current_version)
       = select_tag "language", options_for_select(language_options, current_language)

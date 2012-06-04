@@ -11,6 +11,6 @@ class Version < ActiveRecord::Base
   end
 
   def self.[](name)
-    Version.find_by_name(name)
+    Version.find_by_name!(name)
   end
 end

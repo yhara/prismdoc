@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.1'
+gem 'rails', '3.2.5'
 
 gem 'i18n_generators'
 
@@ -11,6 +11,7 @@ gem 'pg'
 # View
 gem 'slim-rails'
 gem 'active_decorator'
+gem 'jquery-rails'
 
 # Assets
 group :assets do
@@ -25,8 +26,7 @@ group :production do
   gem 'therubyracer-heroku', '0.8.1.pre3'
 end
 
-gem 'jquery-rails'
-
+# Tools
 group :development do
   gem 'pry-rails'
   gem "rails-erd"
@@ -37,6 +37,7 @@ group :development, :test do
   gem 'tapp'
 end
 
+# Testing
 group :test do
   gem 'test-unit', '>= 2'
   gem 'shoulda-context'

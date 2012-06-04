@@ -96,17 +96,14 @@ html, body
     #doc
       margin: 1em
 
-      pre
+      pre.ruby
         @include code-pre
 
       .paragraph
         .current_text
           .not_translated
             color: #888
-        pre.original_text
-          background: white
-          color: black
-          margin-left: 0
+        .original_text
           color: #888
 
       textarea
@@ -157,4 +154,9 @@ span.ruby-constant
 span.ruby-value, span.ruby-regexp, span.ruby-string
   color: #0d0
 
+.not_translated
+  .ruby
+    color: #aaa
+  span.ruby-comment, span.ruby-operator, span.ruby-keyword, span.ruby-identifier, span.ruby-constant, span.ruby-value, span.ruby-regexp, span.ruby-string
+    color: #aaa
 

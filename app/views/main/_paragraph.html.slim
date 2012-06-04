@@ -14,5 +14,6 @@
   form.hidden
     textarea rows=10 cols=100
       = paragraph.text
+    = button_tag "cancel", class: "cancel"
     = submit_tag "save", class: "update_paragraph", data: {url: paragraph_path(paragraph)}
 

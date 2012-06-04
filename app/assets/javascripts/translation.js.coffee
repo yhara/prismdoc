@@ -3,12 +3,15 @@
 #
 
 add_handlers = ->
-  # Show edit form
-  $('.paragraph > .current_text, .paragraph > .original_text').click ->
+  # Toggle edit form
+  $('.paragraph .current_text,
+    .paragraph .original_text,
+    .paragraph .cancel').click ->
     para = $(this).closest(".paragraph")
     $(para).children(".current_text").toggle()
     $(para).children(".original_text").toggle()
     $(para).children("form").toggle()
+    false
 
   # Submit translation
   $('.update_paragraph').click ->

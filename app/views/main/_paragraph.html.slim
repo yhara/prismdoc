@@ -1,7 +1,9 @@
+// A Paragraph and its translation form
+
 .paragraph
   .current_text
-    pre class=(paragraph.translated? ? "translated" : "not_translated")
-      = paragraph.text
+    div class=(paragraph.translated? ? "translated" : "not_translated")
+      == paragraph.html
 
   .original_text.hidden
     pre

@@ -3,7 +3,7 @@ class ParagraphsController < ApplicationController
     para = Paragraph.find(params[:id])
     
     if para.update_attributes(params[:paragraph])
-      head :ok
+      render text: para.html
     else
       render json: para.errors, status: :unprocessable_entity
     end

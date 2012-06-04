@@ -6,6 +6,11 @@
   font-family: "Lucida Console", Monaco, monospace
   font-size: 95%
   line-height: 110%
+  margin-left: 1em
+  background: #666
+  color: white
+  padding: 0.5em
+  font-weight: normal
 
 $header_height: 30px
 
@@ -98,7 +103,10 @@ html, body
         .current_text
           .not_translated
             color: #888
-        .original_text
+        pre.original_text
+          background: white
+          color: black
+          margin-left: 0
           color: #888
 
       textarea
@@ -131,3 +139,22 @@ a:hover, a:visited:hover
 
 #left
   //background: #f8fbea
+
+//
+// Code highlight
+//
+
+span.ruby-comment
+  color: #8cf
+span.ruby-operator
+  // includes '|' for blocks...
+span.ruby-keyword
+  color: #f9bb00
+span.ruby-identifier
+  // ruby code is mostly made of identifiers
+span.ruby-constant
+  color: #e66
+span.ruby-value, span.ruby-regexp, span.ruby-string
+  color: #0d0
+
+

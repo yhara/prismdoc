@@ -1,6 +1,23 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+# 
+# JavaScript for search form, pjax, etc.
+#
+
+# Structure:
+#
+#   #topbar
+#     #search
+#       input#search-box
+#     ...
+#
+#   #content
+#     #left
+#       #left_contents
+#         h2 ...
+#       ul#search_result
+#
+#     #right
+#       #doc
+#         ...
 
 PrismDoc = {}
 
@@ -87,8 +104,8 @@ init_search = ->
           ul.append make_li(name, i % 2 == 0)
         else if i == 30
           ul.append $('<li>...</li>')
-
     else
+      $('#search_result').empty()
       $('#left_contents').show()
 
   $.getJSON "/index.json", (data) ->

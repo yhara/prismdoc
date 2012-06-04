@@ -27,13 +27,13 @@ module RubyApi
         setup do
           @eng_doc = Document.create(entry: entries("builtin19"),
                                      language: languages("en"),
-                                     body: "aa\nbb\n\n\ncc\n\ncc\n")
+                                     body: "aa\nbb\n\n\ncc\n\ncc\n AA\n \n BB")
         end
 
         should "create paragraphs for English document" do
           paras = @eng_doc.paragraphs
-          assert_equal [nil, nil, nil], paras.map(&:original)
-          assert_equal ["aa\nbb", "cc", "cc"], paras.map(&:body)
+          assert_equal ["aa\nbb", "cc", "cc", " AA\n \n BB"], paras.map(&:body)
+          assert_equal [nil, nil, nil, nil], paras.map(&:original)
           assert paras[1].id == paras[2].id
         end
         
@@ -42,7 +42,7 @@ module RubyApi
                                 language: languages("tt"))
           paras = doc.paragraphs
           assert_equal @eng_doc.paragraphs, paras.map(&:original)
-          assert_equal [nil, nil, nil], paras.map(&:body)
+          assert_equal [nil, nil, nil, nil], paras.map(&:body)
         end
       end
 

@@ -99,7 +99,36 @@ class Document < ActiveRecord::Base
   end
 
   def split_body(body)
-    body.split(/^\s*\n/)
+    ret = []
+    para = ""
+    in_code = false
+
+    body.lines.each do |line|
+      if in_code
+        if indented?(line) || line.blank?
+          para << line
+        else
+          in_code = false
+          ret << para; para = line
+        end
+      else
+        if line.blank?
+          para << line
+          ret << para unless para == "\n"; para = ""
+        elsif indented?(line)
+          in_code = true
+          ret << para; para = line
+        else
+          para << line
+        end
+      end
+    end
+    ret << para
+    return ret
+  end
+
+  def indented?(str)
+    str =~ /\A\s+\S+/
   end
 end
 

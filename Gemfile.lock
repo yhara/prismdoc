@@ -122,6 +122,8 @@ GEM
     slim-rails (0.2.1)
       slim (>= 0.9.2)
     slop (2.4.4)
+    spinjs-rails (0.0.3)
+      rails (>= 3.1)
     spork (0.9.2)
     spork-testunit (0.0.8)
       spork (>= 0.6.0)
@@ -164,6 +166,7 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   shoulda-context
   slim-rails
+  spinjs-rails
   spork-testunit
   tapp
   test-unit (>= 2)

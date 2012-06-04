@@ -10,8 +10,9 @@ gem 'pg'
 
 # View
 gem 'slim-rails'
-gem 'active_decorator'
 gem 'jquery-rails'
+gem 'spinjs-rails'
+gem 'active_decorator'
 
 # Assets
 group :assets do

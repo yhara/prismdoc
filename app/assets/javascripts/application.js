@@ -14,5 +14,6 @@
 //= require jquery_ujs
 //
 //= require jquery.pjax
+//= require jquery.spin
 //
 //= require_tree .

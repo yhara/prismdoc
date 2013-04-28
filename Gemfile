@@ -10,7 +10,7 @@ gem 'pg'
 
 # View
 gem 'slim-rails'
-gem 'jquery-rails'
+gem 'jquery-rails', "2.0.1"
 gem 'spinjs-rails'
 gem 'active_decorator'
 
